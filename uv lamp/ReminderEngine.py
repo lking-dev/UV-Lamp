@@ -3,7 +3,7 @@ import os
 import os.path
 from datetime import datetime
 
-from DBConnector import DBConnector
+from DBAccess import DBAccess
 
 # ReminderEngine: handles core functionality for orders and reminders
 class ReminderEngine:
@@ -56,7 +56,7 @@ class ReminderEngine:
     # schedules a reminder for an order
     def scheduleReminder(self, order):
         orderid = order[0] # index of 0 refers to orderid
-        orderlastdate = order[3] # index of 3 refers to orderlastchanged
+        orderlastdate = order[2] # index of 3 refers to orderlastchanged
 
         # parse datetime out of last changed text field
         last_change = datetime.strptime(orderlastdate, "%m/%d/%Y")
