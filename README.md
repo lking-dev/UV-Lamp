@@ -1,1 +1,1 @@
-UV Lamp reminder project
+UV-Lamp Reminder Project
