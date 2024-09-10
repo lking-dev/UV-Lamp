@@ -1,9 +1,9 @@
 import sqlite3
 import os
 import os.path
-from Container import OrderObject
-from Container import ReminderObject
-from Container import CustomerObject
+from container import customer
+from container import order
+from container import reminder
 
 # DBConnector class
 # holds all functionality for querying and updating records
@@ -38,19 +38,25 @@ class DBAccess:
     def getAllCustomers(self):
         sql = "SELECT * FROM Customers;"
         self.cursor.execute(sql)
-        return [CustomerObject.CustomerObject(o) for o in self.cursor.fetchall() if o != None]
+        return [customer.CustomerObject(o) for o in self.cursor.fetchall() if o != None]
 
     # grabs all order data
     def getAllOrders(self):
         sql = "SELECT * FROM Orders;"
         self.cursor.execute(sql)
-        return [OrderObject.OrderObject(o) for o in self.cursor.fetchall() if o != None]
+        return [order.OrderObject(o) for o in self.cursor.fetchall() if o != None]
     
     # grabs all reminder data
     def getAllReminders(self):
         sql = "SELECT * FROM Reminders;"
         self.cursor.execute(sql)
-        return [ReminderObject.ReminderObject(o) for o in self.cursor.fetchall() if o != None]
+        return [reminder.ReminderObject(o) for o in self.cursor.fetchall() if o != None]
+    
+    # grabs all customer data
+    def getCustomer(self, id):
+        sql = "SELECT * FROM Customers WHERE customerid = " + str(id) + ";"
+        self.cursor.execute(sql)
+        return customer.CustomerObject(self.cursor.fetchone())
         
     # replaces data for a customer record
     # TODO: def updateCustomer(self, oldid, newdata):
@@ -79,4 +85,4 @@ class DBAccess:
         self.cursor.execute(sql)
 
         data = self.cursor.fetchone()
-        return ReminderObject.ReminderObject(data)
+        return reminder.ReminderObject(data)

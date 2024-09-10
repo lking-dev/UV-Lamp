@@ -4,9 +4,9 @@ import os.path
 from datetime import datetime
 
 from DBAccess import DBAccess
-from Container import CustomerObject
-from Container import ReminderObject
-from Container import OrderObject
+from container import customer
+from container import order
+from container import reminder
 
 # ReminderEngine: handles core functionality for orders and reminders
 class ReminderEngine:
@@ -18,6 +18,7 @@ class ReminderEngine:
     def handleReminders(self):
         # fetch the order data
         data = self.database.getAllOrders()
+        customers = []
 
         for order in data:
             # try and get the assoociated reminder for the order
@@ -26,16 +27,18 @@ class ReminderEngine:
             # if there is a reminder, check if action needs to be taken
             if reminder:
                 # index of 1 refers to the scheduled date of the reminder (reminderdate)
-                print("[DEBUG] Reminder found for order {}, scheduled on {}".format(order.id, reminder.date))
-                self.executeReminder(order, reminder)
+                if self.testReminder(order, reminder):
+                    customer = self.database.getCustomer(order.customerid)
+                    customers.append(customer)
 
             # if no reminder, schedule a new one
             else:
-                print("[DEBUG] No reminders found for order {}".format(order.id))
                 self.scheduleReminder(order)
+        
+        return customers
 
     # determines the rout of action to be taken on a reminder
-    def executeReminder(self, order, reminder):
+    def testReminder(self, order, reminder):
         # grab the current date for comparison
         present = datetime.now()
         # get a datetime object from the string stored in the reminder
@@ -43,10 +46,10 @@ class ReminderEngine:
 
         # if the date has been passed then send email
         if present >= due:
-            print("[DEBUG] Reminder email needed for order {}".format(order.id))
+            return True
         # otherwise no action
         else:
-            print("[DEBUG] Reminder action not needed for order {}".format(order.id))
+            return False
 
     # schedules a reminder for an order
     def scheduleReminder(self, order):

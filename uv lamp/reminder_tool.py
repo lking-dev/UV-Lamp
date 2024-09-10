@@ -4,17 +4,21 @@ import os
 
 import DBAccess
 import ReminderEngine
+import EmailHandler
 
 # create the debug database
 database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
 
 # create a reminder engine instance to manage the debug database
 engine = ReminderEngine.ReminderEngine(database)
+emailclient = EmailHandler.EmailHandler("reminder@diversitech.com")
 
-# test if any reminders; should say no orders found and make a new one
-print("first time:")
-engine.handleReminders()
+customers = engine.handleReminders()
 
-# test for newly created reminder; shoul say reminder found and scheduled in 3 yeasrs time
-print("second time:")
-engine.handleReminders()
+for customer in customers:
+    emailclient.sendEmail(
+        customer.email,
+        "UV-Lamp Replacement Reminder",
+        "C:\\Users\\lking\\Desktop\\UV-Lamp\\uv lamp\\templates\\",
+        "test.html",
+        {"name": customer.firstname})
