@@ -1,0 +1,44 @@
+#table {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-collapse: collapse;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 45%;
+}
+
+#table td, th {
+    text-align: left;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: #404040;
+}
+
+#table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+#table thead {
+    background-color: #f0f0f0;
+}
+
+#table td:nth-child(1),
+#table td:nth-child(2),
+#table td:nth-child(3) {
+    max-width: 25px;
+}
+
+.delete-btn {
+    cursor: pointer;
+    background-color: white;
+    border: 0;
+    font-size: 16px;
+    color: #404040;
+}
+
+.checkmark {
+    cursor: pointer;
+}

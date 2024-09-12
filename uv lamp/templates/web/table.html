@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+    <link rel = "stylesheet" href = "static/stylesheets/table.css"/>
+    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <table id = "table">
+        <thead>
+            <form action = "/" method = "POST" onsubmit = "false">
+                <tr>
+                    <th>
+                        <input type = "checkbox"/>
+                    </th>
+                    <th></th>
+                    {% for column in columns.values() %}
+                    <th>
+                        {{ column }}
+                    </th>
+                    {% endfor %}
+                </tr>
+                <!--
+                <tr>
+                    <th></th>
+                    {% for column in columns.keys() %}
+                    <th>
+                        <input type = "text" name = "{{ column }}"/>
+                    </th>
+                    {% endfor %}
+                </tr>
+            -->
+            </form>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>
+                    <input type = "checkbox" class = "checkmark"/>
+                </td>
+                <td>
+                    <button class = "delete-btn"><i class = "fa fa-trash"></i></button>
+                </td>
+                {% if type == "customer" %}
+                    <td>{{row.id}}</td>
+                    <td>{{row.firstname}}</td>
+                    <td>{{row.lastname}}</td>
+                    <td>{{row.company}}</td>
+                    <td>{{row.email}}</td>
+                    <td>{{row.phone}}</td>
+                {% elif type == "order" %}
+                    <td>{{row.id}}</td>
+                    <td>{{row.placed}}</td>
+                    <td>{{row.lastchanged}}</td>
+                    <td>{{row.customerid}}</td>
+                {% elif type == "reminder" %}
+                    <td>{{row.id}}</td>
+                    <td>{{row.date}}</td>
+                    <td>{{row.orderid}}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>

@@ -19,6 +19,6 @@ for customer in customers:
     emailclient.sendEmail(
         customer.email,
         "UV-Lamp Replacement Reminder",
-        "C:\\Users\\lking\\Desktop\\UV-Lamp\\uv lamp\\templates\\",
+        "C:\\Users\\lking\\Desktop\\UV-Lamp\\uv lamp\\templates\\email\\",
         "test.html",
         {"name": customer.firstname})
