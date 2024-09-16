@@ -18,9 +18,9 @@ class DBAccess:
         self.connected = True
 
     # creates a new customer
-    def addCustomer(self, customer_name, customer_email):
-        sql = "INSERT INTO Customers(customername, customeremail) VALUES(?, ?)"
-        self.cursor.execute(sql, (customer_name, customer_email))
+    def addCustomer(self, customer_firstname, customer_lastname, customer_company, customer_email, customer_phone):
+        sql = "INSERT INTO Customers(customerfirstname, customerlastname, customercompany, customeremail, customerphone) VALUES(?, ?, ?, ?, ?)"
+        self.cursor.execute(sql, (customer_firstname, customer_lastname, customer_company, customer_email, customer_phone))
 
     # creates a new order and links it to a customer
     def addOrder(self, customer_id, date_placed):
