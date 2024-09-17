@@ -27,8 +27,17 @@ columns_reminders = {
 
 @app.route("/")
 def home_page():
-    return redirect(url_for("customer_table"))
+    return redirect(url_for("login"))
     
+@app.get("/login")
+def login_page():
+    return render_template("web/login.html")
+
+@app.post("/login")
+def login():
+    print(request.form["form-email"])
+
+    return redirect(url_for("login"))
 
 @app.get("/customer_table")
 def customer_table():

@@ -2,6 +2,14 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+body {
+    background-image: linear-gradient(to bottom right, white, grey);
+}
+
+html {
+    height: 100%;
+}
+
 #table {
     border-collapse: collapse;
     width: 100%;
@@ -64,6 +72,7 @@
     width: 65%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     border: 1px solid #dddddd;
+    background-color: white;
 }
 
 #search-row {
