@@ -7,6 +7,6 @@
 
 class ReminderObject:
     def __init__(self, data):
-        self.id = data[0]
-        self.date = data[1]
-        self.orderid = data[2]
+        self.id = data["reminderid"]
+        self.date = data["reminderdate"]
+        self.orderid = data["orderid"]

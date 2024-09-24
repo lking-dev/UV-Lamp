@@ -57,8 +57,6 @@ def user_orders():
     database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
     print(session["userid"])
     orders = database.searchOrdersByCustomer(session["userid"])
-
-    orders[1].status = "UP TO DATE"
     
     return render_template("web/orders.html", orders = orders)
 
@@ -103,8 +101,7 @@ def try_login(firstname, lastname, email):
     print("LOGIN ATTEMPT FROM {} {} ({})".format(firstname, lastname, email))
     
     database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
-    id = database.searchCustomerId(firstname, lastname, email)
-    print(id)
+    id = database.searchForCustomerId(firstname, lastname, email)
 
     if id is None:
         return None

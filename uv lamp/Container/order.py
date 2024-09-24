@@ -4,18 +4,21 @@
 # orderid INTEGER PRIMARY KEY AUTOINCREMENT
 # orderplaced TEXT
 # orderlastchanged TEXT
+# orderlocation TEXT
+# orderstatus INT
 # customerid INTEGER (FOREIGN KEY)
 
 class OrderObject:
-    order = [
-        
-    ]
+    order_statuses = {
+        0: "ALL GOOD",
+        1: "REPLACEMENT NEEDED"
+    }
 
     def __init__(self, data):
-        self.id = data[0]
-        self.placed = data[1]
-        self.lastchanged = data[2]
-        self.customerid = data[3]
+        self.id = data["orderid"]
         self.formattedid = "{:04d}".format(self.id)
-        self.location = "9538 Kingston Crossing Cir, 30022, John's Creek GA"
-        self.status = "NEEDS REPLACEMENT"
+        self.placed = data["orderplaced"]
+        self.lastchanged = data["orderlastchanged"]
+        self.customerid = data["customerid"]
+        self.location = data["orderlocation"]
+        self.status = data["orderstatus"]

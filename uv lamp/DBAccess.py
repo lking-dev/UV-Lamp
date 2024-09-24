@@ -12,6 +12,7 @@ class DBAccess:
     def __init__(self, pathname):
         # connect to the database and get the cursor for execution
         self.connector = sqlite3.connect(pathname)
+        self.connector.row_factory = sqlite3.Row
         self.cursor = self.connector.cursor()
 
         # flag for the connections status
@@ -70,7 +71,7 @@ class DBAccess:
 
     # finds the id of a customer based on name and email
     # this is mainly for debug
-    def searchCustomerId(self, customer_firstname, customer_lastname, customer_email):
+    def searchForCustomerId(self, customer_firstname, customer_lastname, customer_email):
         sql = """
             SELECT customerid FROM Customers WHERE customerfirstname = ? AND customerlastname = ? AND customeremail = ? LIMIT 1;
         """

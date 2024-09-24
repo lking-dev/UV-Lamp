@@ -10,9 +10,9 @@
 
 class CustomerObject:
     def __init__(self, data):
-        self.id = data[0]
-        self.firstname = data[1]
-        self.lastname = data[2]
-        self.company = data[3]
-        self.email = data[4]
-        self.phone = data[5]
+        self.id = data["customerid"]
+        self.firstname = data["customerfirstname"]
+        self.lastname = data["customerlastname"]
+        self.company = data["customercompany"]
+        self.email = data["customeremail"]
+        self.phone = data["customerphone"]

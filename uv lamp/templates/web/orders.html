@@ -13,10 +13,10 @@
                             <div class = "order">
                                 <label class = "order-heading">
                                     <b>Order #{{ order.formattedid }}: </b>
-                                    {% if order.status == "UP TO DATE" %}
-                                        <b style = "color: green;">{{ order.status }}</b>
-                                    {% elif order.status == "NEEDS REPLACEMENT" %}
-                                        <b style = "color: red;">{{ order.status }}</b>
+                                    {% if order.status == 0 %}
+                                        <b style = "color: green;">{{ order.order_statuses[order.status] }}</b>
+                                    {% elif order.status == 1 %}
+                                        <b style = "color: red;">{{ order.order_statuses[order.status] }}</b>
                                     {% endif %}
                                 </label>
                                 <label class = "order-content">Placed on {{ order.placed }}</label>
