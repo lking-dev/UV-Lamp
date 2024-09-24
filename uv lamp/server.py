@@ -1,5 +1,6 @@
 from flask import *
 import DBAccess
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "adhjjaljdal;djhwajw23jdjaw;jdakjd;ajkh;io"
@@ -55,10 +56,24 @@ def user_orders():
         return "You are not logged in! <br><a href = '/login'>" + "click here to log in</a>"
 
     database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
-    print(session["userid"])
     orders = database.searchOrdersByCustomer(session["userid"])
     
     return render_template("web/orders.html", orders = orders)
+
+@app.post("/user_orders/update/<orderid>")
+def update_user_order(orderid):
+    print("REQUEST TO UPDATE ORDER {} TO RE-INSTALLED".format(orderid))
+    orderid = int(orderid)
+
+    database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
+    order = database.searchOrderById(orderid)
+
+    if order.status == 0: order.status = 1
+    elif order.status == 1: order.status = 0
+    order.lastchanged = datetime.strftime(datetime.now(), "%m/%d/%Y")
+    database.updateOrder(order)
+
+    return redirect(url_for("user_orders"))
 
 @app.get("/customer_table")
 def customer_table():

@@ -4,8 +4,13 @@
         <link rel = "stylesheet" href = "static/stylesheets/orders.css"/>
     </head>
     <body>
-        <div id = "main-div" class = "debug">
-            <table id = "main-table">
+        <div id = "main-div">
+            <div id = "header-div" class = "debug">
+                <label id = "table-label">
+                    <b>Your Orders ({{ orders|length }} total)</b>
+                </label>
+            </div>
+            <table id = "main-table" class = "debug">
                 <tbody>
                     {% for order in orders %}
                     <tr class = "order-row">
@@ -19,7 +24,10 @@
                                         <b style = "color: red;">{{ order.order_statuses[order.status] }}</b>
                                     {% endif %}
                                 </label>
-                                <label class = "order-content">Placed on {{ order.placed }}</label>
+                                <form action = "/user_orders/update/{{ order.id }}" method = "POST">
+                                    <input type = "submit" class = "link-button order-update" value = "Update Order Status"></input>
+                                </form>
+                                <label class = "order-content">Ordered on {{ order.placed }}</label>
                                 <label class = "order-content">Installed on {{ order.placed }}</label>
                                 <label class = "order-content">At {{ order.location }}</label>
                             </div>

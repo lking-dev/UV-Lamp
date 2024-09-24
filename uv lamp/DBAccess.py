@@ -63,7 +63,13 @@ class DBAccess:
     # TODO: def updateCustomer(self, oldid, newdata):
 
     # replaces data for a order record
-    # TODO: def updateOrder(self, oldid, newdata):
+    def updateOrder(self, order):
+        sql = """
+            UPDATE Orders SET orderplaced = ?, orderlastchanged = ?, customerid = ?, orderlocation = ?, orderstatus = ? WHERE orderid = ?;
+        """
+
+        self.cursor.execute(sql, (order.placed, order.lastchanged, order.customerid, order.location, order.status, order.id))
+        self.connector.commit()
 
     # replaces data for a reminder record
     # TODO: def updateReminder(self, oldid, newdata):
@@ -87,6 +93,11 @@ class DBAccess:
         sql = "SELECT * FROM Orders WHERE customerid = ?;"
         self.cursor.execute(sql, [(id)])
         return [order.OrderObject(o) for o in self.cursor.fetchall() if o != None]
+    
+    def searchOrderById(self, id):
+        sql = "SELECT * FROM Orders WHERE orderid = ?;"
+        self.cursor.execute(sql, [(id)])
+        return order.OrderObject(self.cursor.fetchone())
     
     # finds any reminders that pertain to a certian order
     def getReminderFromOrder(self, orderid):
