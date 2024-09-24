@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel = "stylesheet" href = "static/stylesheets/orders.css"/>
+    </head>
+    <body>
+        <div id = "main-div" class = "debug">
+            <table id = "main-table">
+                <tbody>
+                    {% for order in orders %}
+                    <tr class = "order-row">
+                        <td>
+                            <div class = "order">
+                                <label class = "order-heading">
+                                    <b>Order #{{ order.formattedid }}: </b>
+                                    {% if order.status == "UP TO DATE" %}
+                                        <b style = "color: green;">{{ order.status }}</b>
+                                    {% elif order.status == "NEEDS REPLACEMENT" %}
+                                        <b style = "color: red;">{{ order.status }}</b>
+                                    {% endif %}
+                                </label>
+                                <label class = "order-content">Placed on {{ order.placed }}</label>
+                                <label class = "order-content">Installed on {{ order.placed }}</label>
+                                <label class = "order-content">At {{ order.location }}</label>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

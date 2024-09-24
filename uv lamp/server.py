@@ -2,6 +2,7 @@ from flask import *
 import DBAccess
 
 app = Flask(__name__)
+app.secret_key = "adhjjaljdal;djhwajw23jdjaw;jdakjd;ajkh;io"
 
 columns_customers = {
     "id": "ID",
@@ -31,13 +32,35 @@ def home_page():
     
 @app.get("/login")
 def login_page():
-    return render_template("web/login.html")
+    return render_template("web/login.html", failed = False)
 
 @app.post("/login")
 def login():
-    print(request.form["form-email"])
+    userid = try_login(request.form["form-fname"], request.form["form-lname"], request.form["form-email"])
 
-    return redirect(url_for("login"))
+    if not userid:
+        return render_template("web/login.html", failed = True)
+    else:
+        session["username"] = request.form["form-fname"] + " " + request.form["form-lname"]
+        session["userid"] = userid
+
+        database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
+        
+
+        return redirect(url_for("user_orders"))
+    
+@app.get("/user_orders")
+def user_orders():
+    if "username" not in session:
+        return "You are not logged in! <br><a href = '/login'>" + "click here to log in</a>"
+
+    database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
+    print(session["userid"])
+    orders = database.searchOrdersByCustomer(session["userid"])
+
+    orders[1].status = "UP TO DATE"
+    
+    return render_template("web/orders.html", orders = orders)
 
 @app.get("/customer_table")
 def customer_table():
@@ -75,5 +98,16 @@ def reminder_table():
         rows = rows,
         type = "reminder"
     )
+
+def try_login(firstname, lastname, email):
+    print("LOGIN ATTEMPT FROM {} {} ({})".format(firstname, lastname, email))
+    
+    database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
+    id = database.searchCustomerId(firstname, lastname, email)
+    print(id)
+
+    if id is None:
+        return None
+    return id
 
 app.run()

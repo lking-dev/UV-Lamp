@@ -70,14 +70,22 @@ class DBAccess:
 
     # finds the id of a customer based on name and email
     # this is mainly for debug
-    def searchCustomerId(self, customer_name, customer_email):
+    def searchCustomerId(self, customer_firstname, customer_lastname, customer_email):
         sql = """
-            SELECT customerid FROM Customers WHERE customername = ? AND customeremail = ? LIMIT 1;
+            SELECT customerid FROM Customers WHERE customerfirstname = ? AND customerlastname = ? AND customeremail = ? LIMIT 1;
         """
 
-        self.cursor.execute(sql, (customer_name, customer_email))
+        self.cursor.execute(sql, (customer_firstname, customer_lastname, customer_email))
         # index of 0 corresponds to the id
-        return self.cursor.fetchone()[0]
+        try:
+            return self.cursor.fetchone()[0]
+        except:
+            return None
+        
+    def searchOrdersByCustomer(self, id):
+        sql = "SELECT * FROM Orders WHERE customerid = ?;"
+        self.cursor.execute(sql, [(id)])
+        return [order.OrderObject(o) for o in self.cursor.fetchall() if o != None]
     
     # finds any reminders that pertain to a certian order
     def getReminderFromOrder(self, orderid):

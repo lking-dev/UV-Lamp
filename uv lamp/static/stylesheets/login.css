@@ -1,17 +1,20 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900);
 * {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 
 #main-div {
     margin-left: auto;
     margin-right: auto;
     margin-top: 8%;
-    height: 500px;
-    width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-    padding-top: 20px;
-    border-radius: 10px;
-    background-color: white;
+    height: 400px;
+    width: 350px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding-top: 42px;
+    border-radius: 4px;
+    background-color: #12192c;
+    justify-content: center;
+    display: flex;
 }
 
 .debug {
@@ -19,45 +22,68 @@
 }
 
 #top-label {
-    margin-left: 62px;
-    font-size: 28px;
+    font-size: 30px;
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+
+#fail-label {
+    font-size: 14;
+    color: rgb(253, 33, 63);
+    display: flex;
+    justify-content: center;
+    margin-bottom: -20px;
+    vertical-align: top;
 }
 
 .textbox {
     font-size: 24px;
+    height: 45px;
     border: 0;
+    color: grey;
     border-bottom: 1px solid grey;
+    background: none;
     display: block;
     margin: 0 auto;
-    margin-top: 28px;
+    margin-top: 24px;
+    transition: all 0.2s ease;
 }
 
 .textbox:focus {
-    border: 0;
+    border: none;
     outline: none;
-    border-bottom: 1px solid grey;
+    color: #e1d9ec;
+    border-bottom: 1px solid #e1d9ec;
 }
 
 #submit-button {
     display: block;
     margin: 0 auto;
-    height: 45px;
-    margin-top: 28px;
-    border: 1px solid #202020;
+    height: 56px;
+    margin-top: 32px;
     cursor: pointer;
-    width: 70%;
-    font-size: 20px;
-    border-radius: 2px;
+    border: none;
+    width: 277px;
+    font-size: 24px;
+    border-radius: 4px;
     transition-duration: .25s;
+    background-color: #296b60;
+    border-radius: 4px;
+    color: white;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+}
+
+#fname-input {
+    margin-top: 28px;
 }
 
 #submit-button:hover {
-    background-color: #202020;
-    color: white;
+    background-color: #389b8a;
 }
 
 body {
-    background-image: linear-gradient(to bottom right, white, grey);
+    background-color: #389b8a;
 }
 
 html {

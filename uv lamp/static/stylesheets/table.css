@@ -93,6 +93,11 @@ html {
     border-top: 1px solid #dddddd;
 }
 
+#table tbody tr:hover {
+    background-color: #f2fffe;
+    cursor: pointer;
+}
+
 #table thead {
     background-color: #f0f0f0;
     position: sticky;

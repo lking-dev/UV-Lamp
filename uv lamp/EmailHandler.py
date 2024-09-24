@@ -6,7 +6,7 @@ from sendgrid.helpers import mail
 
 class EmailHandler:
     def __init__(self, email):
-        # self.api = sendgrid.SendGridAPIClient(api_key = os.environ.get("SENDGRID_API_KEY"))
+        self.api = sendgrid.SendGridAPIClient(api_key = "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")
         self.sender = mail.Email(email)
 
     # destination: email address to be sent to
@@ -21,4 +21,17 @@ class EmailHandler:
         recipient = mail.To(destination)
         content = mail.Content("text/html", template.render(context))
         email = mail.Mail(self.sender, recipient, subject, content)
-        print(json.dumps(email.get(), sort_keys = False, indent = 4))
+        
+        response = self.api.send(email)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+
+
+emailer = EmailHandler("mesbrook@diversitech.com")
+emailer.sendEmail(
+        "lanmanking@yahoo.com",
+        "UV-Lamp Replacement Reminder",
+        "C:\\Users\\lking\\Desktop\\UV-Lamp\\uv lamp\\templates\\email\\",
+        "test.html",
+        {"name": "Landry M. King"})
