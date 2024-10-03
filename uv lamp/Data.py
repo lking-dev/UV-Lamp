@@ -1,13 +1,13 @@
 import sqlite3
 import os
 import os.path
-from container import customer
-from container import order
-from container import reminder
+from container.customer import CustomerObject
+from container.reminder import ReminderObject
+from container.order import OrderObject
 
 # DBConnector class
 # holds all functionality for querying and updating records
-class DBAccess:
+class Data:
     # constructor that sets up the database
     def __init__(self, pathname):
         # connect to the database and get the cursor for execution
@@ -18,9 +18,9 @@ class DBAccess:
         # flag for the connections status
         self.connected = True
 
-    ############################
-    ###   SEARCH FUNCTIONS   ###
-    ############################
+    #########################
+    ###   ADD FUNCTIONS   ###
+    #########################
 
     # creates a new customer
     def addCustomer(self, customer_firstname, customer_lastname, customer_company, customer_email, customer_phone):
@@ -47,19 +47,19 @@ class DBAccess:
     def getAllCustomers(self):
         sql = "SELECT * FROM Customers;"
         self.cursor.execute(sql)
-        return [customer.CustomerObject(o) for o in self.cursor.fetchall() if o != None]
+        return [CustomerObject(o) for o in self.cursor.fetchall() if o != None]
 
     # grabs all order data
     def getAllOrders(self):
         sql = "SELECT * FROM Orders;"
         self.cursor.execute(sql)
-        return [order.OrderObject(o) for o in self.cursor.fetchall() if o != None]
+        return [OrderObject(o) for o in self.cursor.fetchall() if o != None]
     
     # grabs all reminder data
     def getAllReminders(self):
         sql = "SELECT * FROM Reminders;"
         self.cursor.execute(sql)
-        return [reminder.ReminderObject(o) for o in self.cursor.fetchall() if o != None]
+        return [ReminderObject(o) for o in self.cursor.fetchall() if o != None]
 
     ############################
     ###   SEARCH FUNCTIONS   ###
@@ -69,7 +69,7 @@ class DBAccess:
     def searchCustomerByID(self, id):
         sql = "SELECT * FROM Customers WHERE customerid = " + str(id) + ";"
         self.cursor.execute(sql)
-        return customer.CustomerObject(self.cursor.fetchone())
+        return CustomerObject(self.cursor.fetchone())
 
     # search customer using firstname/lastname/email fields
     def searchCustomerByFields(self, firstname, lastname, email):
@@ -79,19 +79,27 @@ class DBAccess:
         result = self.cursor.fetchone()
         if not result:
             return None
-        return customer.CustomerObject(result)
+        return CustomerObject(result)
 
     # find order by id
     def searchOrderByID(self, id):
         sql = "SELECT * FROM Orders WHERE orderid = " + str(id) + ";"
         self.cursor.execute(sql)
-        return order.OrderObject(self.cursor.fetchone())
+
+        result = self.cursor.fetchone()
+        if not result:
+            return None
+        return OrderObject(result)
 
     # find reminder by id
     def searchReminderByID(self, id):
-        sql = "SELECT * FROM Reminders WHERE reminderid = " + str(id) + ";"
-        self.cursor.execute(sql)
-        return reminder.ReminderObject(self.cursor.fetchone())
+        sql = "SELECT * FROM Reminders WHERE reminderid = ?;"
+        self.cursor.execute(sql, [(id)])
+
+        result = self.cursor.fetchone()
+        if not result:
+            return None
+        return ReminderObject(result)
 
     ############################
     ###   UPDATE FUNCTIONS   ###
@@ -159,12 +167,14 @@ class DBAccess:
     def searchOrdersForCustomer(self, id):
         sql = "SELECT * FROM Orders WHERE customerid = ?;"
         self.cursor.execute(sql, [(id)])
-        return [order.OrderObject(o) for o in self.cursor.fetchall() if o != None]
+        return [OrderObject(o) for o in self.cursor.fetchall() if o != None]
     
     # finds any reminders that pertain to a certian order
     def searchRemindersForOrder(self, id):
-        sql = "SELECT * FROM Reminders WHERE orderid = " + str(orderid) + " LIMIT 1;"
+        sql = "SELECT * FROM Reminders WHERE orderid = " + str(id) + " LIMIT 1;"
         self.cursor.execute(sql)
 
-        data = self.cursor.fetchone()
-        return reminder.ReminderObject(data)
+        result = self.cursor.fetchone()
+        if not result:
+            return None
+        return ReminderObject(result)
