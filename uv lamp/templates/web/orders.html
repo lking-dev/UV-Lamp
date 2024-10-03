@@ -2,40 +2,54 @@
 <html>
     <head>
         <link rel = "stylesheet" href = "static/stylesheets/orders.css"/>
+        <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
-        <div id = "main-div">
-            <div id = "header-div" class = "debug">
-                <label id = "table-label">
-                    <b>Your Orders ({{ orders|length }} total)</b>
+        <div id = wrapper-div>
+            <div id = "side-div">
+                <label id = "username-display">
+                    <i class = "fa fa-user-circle-o" id = "username-icon"></i>
+                    {{ username }}
                 </label>
+                <form action = "/logout" method = "GET">
+                    <input type = "submit" id = "logout-button" value = "Log Out"></input>
+                </form>
             </div>
-            <table id = "main-table" class = "debug">
-                <tbody>
-                    {% for order in orders %}
-                    <tr class = "order-row">
-                        <td>
-                            <div class = "order">
-                                <label class = "order-heading">
-                                    <b>Order #{{ order.formattedid }}: </b>
-                                    {% if order.status == 0 %}
-                                        <b style = "color: green;">{{ order.order_statuses[order.status] }}</b>
-                                    {% elif order.status == 1 %}
-                                        <b style = "color: red;">{{ order.order_statuses[order.status] }}</b>
+            <div id = "main-div">
+                <div id = "header-div" class = "debug">
+                    <label id = "table-label">
+                        <b>Your Orders ({{ orders|length }} total)</b>
+                    </label>
+                </div>
+                <table id = "main-table" class = "debug">
+                    <tbody>
+                        {% for order in orders %}
+                        <tr class = "order-row">
+                            <td>
+                                <div class = "order">
+                                    <label class = "order-heading">
+                                        <b>Order #{{ order.formattedid }}: </b>
+                                        {% if order.status == 0 %}
+                                            <b style = "color: green;">{{ order.order_statuses[order.status] }}</b>
+                                        {% elif order.status == 1 %}
+                                            <b style = "color: red;">{{ order.order_statuses[order.status] }}</b>
+                                        {% endif %}
+                                    </label>
+                                    {% if order.status == 1 %}
+                                        <form action = "/user_orders/update/{{ order.id }}" method = "POST">
+                                            <input type = "submit" class = "link-button order-update" value = "Update Order Status"></input>
+                                        </form>
                                     {% endif %}
-                                </label>
-                                <form action = "/user_orders/update/{{ order.id }}" method = "POST">
-                                    <input type = "submit" class = "link-button order-update" value = "Update Order Status"></input>
-                                </form>
-                                <label class = "order-content">Ordered on {{ order.placed }}</label>
-                                <label class = "order-content">Installed on {{ order.placed }}</label>
-                                <label class = "order-content">At {{ order.location }}</label>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                                    <label class = "order-content">Order placed {{ order.placed }}</label>
+                                    <label class = "order-content">Last installation {{ order.placed }}</label>
+                                    <label class = "order-content">At {{ order.location }}</label>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </body>
 </html>

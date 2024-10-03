@@ -3,21 +3,77 @@
     font-family: "Roboto", sans-serif;
 }
 
-#main-div {
+#wrapper-div {
     margin-left: auto;
     margin-right: auto;
-    margin-top: 5%;
+    margin-top: 2.5%;
     height: 600px;
-    width: 800px;
+    width: 65%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 4px;
-    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    display: flex;
+}
+
+#main-div {
+    padding-left: 32px;
+    padding-right: 32px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+#side-div {
+    flex-grow: 1;
+    max-width: 15%;
+    /* background-color: #4F7CAC; */
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+
+    background-color: #08605F;
+
+    align-content: center;
+    display: flex;
+    padding: 20px;
+    padding-top: 32px;
+    position: relative;
+}
+
+#username-display {
+    width: 100%;
+    height: 20px;
+    font-size: 20px;
+
+    color: white;
+}
+
+#logout-button {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+
+    color: #C0C0C0;
+    font-size: 16px;
+    text-align: left;
+}
+
+#logout-button:hover {
+    color: white;
+}
+
+#username-icon {
+    margin-right: 4px;
 }
 
 .order-row {
     display: flex;
-    border-bottom: 1px solid #f0f0f0;
     width: 100%;
+    border-bottom: 2px solid #f0f0f0;
 }
 
 .order {
@@ -31,6 +87,7 @@
     color: #1a0dab;
     text-decoration: none;
     font-size: 12px;
+    text-align: left;
 }
 
 .link-button:hover {
@@ -62,9 +119,9 @@
 }
 
 #header-div {
-    padding: 10px;
     align-content: center;
     background-color: #f0f0f0;
+    margin-bottom: 24px;
 }
 
 #table-label {
@@ -72,8 +129,14 @@
 }
 
 #main-table {
-    width: 100%;
     border-collapse: collapse;
+    background-color: white;
+    width: 100%;
+    border-radius: 16px;
+}
+
+.order-row td {
+    border: 16px;
 }
 
 .debug {

@@ -1,9 +1,11 @@
 from flask import *
 import DBAccess
 from datetime import datetime
+import os
 
 app = Flask(__name__)
-app.secret_key = "adhjjaljdal;djhwajw23jdjaw;jdakjd;ajkh;io"
+app.secret_key = "dhladhadahldhaldhaldhaldhaldhaldhaldhaldhalhdalhlhadlhaldhaldhaldhl"
+database_path = os.path.dirname(os.path.realpath(__file__)) + "\orders.db"
 
 columns_customers = {
     "id": "ID",
@@ -45,31 +47,38 @@ def login():
         session["username"] = request.form["form-fname"] + " " + request.form["form-lname"]
         session["userid"] = userid
 
-        database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
+        database = DBAccess.DBAccess(database_path)
         
 
         return redirect(url_for("user_orders"))
+
+@app.get("/logout")
+def logout():
+    if "username" not in session:
+        return redirect(url_for("login"))
+    else:
+        session.clear()
+        return redirect(url_for("login"))
     
 @app.get("/user_orders")
 def user_orders():
     if "username" not in session:
         return "You are not logged in! <br><a href = '/login'>" + "click here to log in</a>"
 
-    database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
-    orders = database.searchOrdersByCustomer(session["userid"])
+    database = DBAccess.DBAccess(database_path)
+    orders = database.searchOrdersForCustomer(session["userid"])
     
-    return render_template("web/orders.html", orders = orders)
+    return render_template("web/orders.html", orders = orders, username = session["username"])
 
 @app.post("/user_orders/update/<orderid>")
 def update_user_order(orderid):
     print("REQUEST TO UPDATE ORDER {} TO RE-INSTALLED".format(orderid))
     orderid = int(orderid)
 
-    database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
-    order = database.searchOrderById(orderid)
+    database = DBAccess.DBAccess(database_path)
+    order = database.searchOrderByID(orderid)
 
-    if order.status == 0: order.status = 1
-    elif order.status == 1: order.status = 0
+    order.status = 0
     order.lastchanged = datetime.strftime(datetime.now(), "%m/%d/%Y")
     database.updateOrder(order)
 
@@ -77,7 +86,7 @@ def update_user_order(orderid):
 
 @app.get("/customer_table")
 def customer_table():
-    database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
+    database = DBAccess.DBAccess(database_path)
     rows = database.getAllCustomers()
 
     return render_template(
@@ -90,7 +99,7 @@ def customer_table():
 
 @app.get("/order_table")
 def order_table():
-    database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
+    database = DBAccess.DBAccess(database_path)
     rows = database.getAllOrders()
 
     return render_template(
@@ -102,7 +111,7 @@ def order_table():
 
 @app.get("/reminder_table")
 def reminder_table():
-    database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
+    database = DBAccess.DBAccess(database_path)
     rows = database.getAllReminders()
 
     return render_template(
@@ -115,11 +124,11 @@ def reminder_table():
 def try_login(firstname, lastname, email):
     print("LOGIN ATTEMPT FROM {} {} ({})".format(firstname, lastname, email))
     
-    database = DBAccess.DBAccess(r"C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db")
-    id = database.searchForCustomerId(firstname, lastname, email)
+    database = DBAccess.DBAccess(database_path)
+    user = database.searchCustomerByFields(firstname, lastname, email)
 
-    if id is None:
+    if user is None:
         return None
-    return id
+    return user.id
 
 app.run()

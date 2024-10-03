@@ -18,6 +18,10 @@ class DBAccess:
         # flag for the connections status
         self.connected = True
 
+    ############################
+    ###   SEARCH FUNCTIONS   ###
+    ############################
+
     # creates a new customer
     def addCustomer(self, customer_firstname, customer_lastname, customer_company, customer_email, customer_phone):
         sql = "INSERT INTO Customers(customerfirstname, customerlastname, customercompany, customeremail, customerphone) VALUES(?, ?, ?, ?, ?)"
@@ -34,6 +38,10 @@ class DBAccess:
         self.cursor.execute(sql, (reminder_date, orderid))
 
         self.connector.commit()
+
+    #############################
+    ###   GET ALL FUNCTIONS   ###
+    #############################
 
     # grabs all customer data
     def getAllCustomers(self):
@@ -52,55 +60,109 @@ class DBAccess:
         sql = "SELECT * FROM Reminders;"
         self.cursor.execute(sql)
         return [reminder.ReminderObject(o) for o in self.cursor.fetchall() if o != None]
-    
-    # grabs all customer data
-    def getCustomer(self, id):
+
+    ############################
+    ###   SEARCH FUNCTIONS   ###
+    ############################
+
+    # find customer by id
+    def searchCustomerByID(self, id):
         sql = "SELECT * FROM Customers WHERE customerid = " + str(id) + ";"
         self.cursor.execute(sql)
         return customer.CustomerObject(self.cursor.fetchone())
-        
-    # replaces data for a customer record
-    # TODO: def updateCustomer(self, oldid, newdata):
 
-    # replaces data for a order record
-    def updateOrder(self, order):
+    # search customer using firstname/lastname/email fields
+    def searchCustomerByFields(self, firstname, lastname, email):
+        sql = "SELECT * FROM Customers WHERE customerfirstname = ? AND customerlastname = ? AND customeremail = ? LIMIT 1;"
+        self.cursor.execute(sql, (firstname, lastname, email))
+
+        result = self.cursor.fetchone()
+        if not result:
+            return None
+        return customer.CustomerObject(result)
+
+    # find order by id
+    def searchOrderByID(self, id):
+        sql = "SELECT * FROM Orders WHERE orderid = " + str(id) + ";"
+        self.cursor.execute(sql)
+        return order.OrderObject(self.cursor.fetchone())
+
+    # find reminder by id
+    def searchReminderByID(self, id):
+        sql = "SELECT * FROM Reminders WHERE reminderid = " + str(id) + ";"
+        self.cursor.execute(sql)
+        return reminder.ReminderObject(self.cursor.fetchone())
+
+    ############################
+    ###   UPDATE FUNCTIONS   ###
+    ############################
+
+    # replaces data for a customer record
+    def updateCustomer(self, customer):
         sql = """
-            UPDATE Orders SET orderplaced = ?, orderlastchanged = ?, customerid = ?, orderlocation = ?, orderstatus = ? WHERE orderid = ?;
+            UPDATE Customers SET
+                customerfirstname = ?,
+                customerlastname = ?,
+                customeremail = ?,
+                customercompany = ?,
+                customerphone = ?   
+            WHERE customerid = ?;
         """
 
-        self.cursor.execute(sql, (order.placed, order.lastchanged, order.customerid, order.location, order.status, order.id))
+        self.cursor.execute(sql, (
+            customer.firstname,
+            customer.lastname,
+            customer.email,
+            customer.company,
+            customer.phone,
+            customer.id
+        ))
+
+        self.connector.commit()
+    
+    # replaces data for an order record
+    def updateOrder(self, order):
+        sql = """
+            UPDATE Orders SET 
+                orderplaced = ?,
+                orderlastchanged = ?,
+                customerid = ?,
+                orderlocation = ?,
+                orderstatus = ? 
+            WHERE orderid = ?;
+        """
+
+        self.cursor.execute(sql, (
+            order.placed,
+            order.lastchanged,
+            order.customerid,
+            order.location,
+            order.status,
+            order.id
+        ))
+
         self.connector.commit()
 
     # replaces data for a reminder record
-    # TODO: def updateReminder(self, oldid, newdata):
-
-
-    # finds the id of a customer based on name and email
-    # this is mainly for debug
-    def searchForCustomerId(self, customer_firstname, customer_lastname, customer_email):
+    def updateReminder(self, reminder):
         sql = """
-            SELECT customerid FROM Customers WHERE customerfirstname = ? AND customerlastname = ? AND customeremail = ? LIMIT 1;
+            UPDATE Orders SET --- WHERE reminderid = ?;
         """
 
-        self.cursor.execute(sql, (customer_firstname, customer_lastname, customer_email))
-        # index of 0 corresponds to the id
-        try:
-            return self.cursor.fetchone()[0]
-        except:
-            return None
-        
-    def searchOrdersByCustomer(self, id):
+        self.cursor.execute(sql, (reminder.id))
+        self.connector.commit()
+    
+    ###########################################
+    ###   SEARCH BY FOREIGN KEY FUNCTIONS   ###
+    ###########################################
+    
+    def searchOrdersForCustomer(self, id):
         sql = "SELECT * FROM Orders WHERE customerid = ?;"
         self.cursor.execute(sql, [(id)])
         return [order.OrderObject(o) for o in self.cursor.fetchall() if o != None]
     
-    def searchOrderById(self, id):
-        sql = "SELECT * FROM Orders WHERE orderid = ?;"
-        self.cursor.execute(sql, [(id)])
-        return order.OrderObject(self.cursor.fetchone())
-    
     # finds any reminders that pertain to a certian order
-    def getReminderFromOrder(self, orderid):
+    def searchRemindersForOrder(self, id):
         sql = "SELECT * FROM Reminders WHERE orderid = " + str(orderid) + " LIMIT 1;"
         self.cursor.execute(sql)
 
