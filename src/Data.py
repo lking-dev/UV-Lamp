@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import os.path
+from pathlib import Path
 from container.customer import CustomerObject
 from container.reminder import ReminderObject
 from container.order import OrderObject
@@ -12,6 +13,7 @@ class Data:
     def __init__(self, pathname):
         # connect to the database and get the cursor for execution
         self.connector = sqlite3.connect(pathname)
+        
         self.connector.row_factory = sqlite3.Row
         self.cursor = self.connector.cursor()
 

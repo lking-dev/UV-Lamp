@@ -1,7 +1,7 @@
 {
-        "database": "C:\\Users\\lking\\Desktop\\UV-Lamp\\uv lamp\\orders.db",
+        "database": "orders.db",
         "reminder_period": 1095,
-        "template": "templates/email/test.html",
+        "template": "reminder.html",
         "sender": "mesbrook@diversitech.com",
         "api": "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",
         "log_enabled": true,

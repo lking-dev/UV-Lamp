@@ -2,6 +2,7 @@ import sqlite3
 import os
 import os.path
 from datetime import datetime
+from pathlib import Path
 
 from Data import Data
 from container import customer
@@ -16,7 +17,16 @@ class Reminder:
         self.log_file = log_file
     
     def printlog(self, log_file, msg):
-        log_file.write(datetime.now().strftime("[%X] ") + msg + "\n")
+        fmt_msg = datetime.now().strftime("[%X]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
+        print(fmt_msg)
+        log_file.write(fmt_msg + "\n")
+
+    def repeatCustomer(self, customers, test):
+        for customer in customers:
+            if customer.id == test.id:
+                return True
+            
+        return False
     
     # goes through all orders and takes action depending on the orders reminders
     def getReminders(self):
@@ -24,23 +34,37 @@ class Reminder:
         data = self.database.getAllOrders()
         customers = []
 
+        needed_reminder = 0
+        needed_scheduling = 0
+        needed_nothing = 0
+
+        self.printlog(self.log_file, "Handling Reminders...")
+        
         for order in data:
             # try and get the assoociated reminder for the order
             reminder = self.database.searchRemindersForOrder(order.id)
-            self.printlog(self.log_file, "Searching for overdue/unscheduled reminders for Order #{}".format(order.formattedid))
 
             # if there is a reminder, check if action needs to be taken
             if reminder:
                 if self.testReminder(order, reminder):
                     customer = self.database.searchCustomerByID(order.customerid)
-                    customers.append(customer)
-                    self.printlog(self.log_file, "Overdue reminder found for Order #{}".format(order.formattedid))
+                    
+                    if customer not in customers:
+                        customers.append(customer)
+
+                    needed_reminder += 1
                 else:
-                    self.printlog(self.log_file, "Everything good for Order #{}".format(order.formattedid))
+                    needed_nothing += 1
             # if no reminder, schedule a new one
             else:
                 self.scheduleReminder(order)
-                self.printlog(self.log_file, "No reminder found! shceduling reminder for Order #{}".format(order.formattedid))
+                needed_scheduling += 1
+
+        self.printlog(self.log_file, "Finished.")
+        self.printlog(self.log_file, "Found {} Unscheduled Orders".format(needed_scheduling))
+        self.printlog(self.log_file, "Found {} Overdue Orders".format(needed_reminder))
+        self.printlog(self.log_file, "Found {} Compliant Orders".format(needed_nothing))
+        self.printlog(self.log_file, "Searched {} Orders Total".format(len(data)))
         
         return customers
 

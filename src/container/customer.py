@@ -16,3 +16,6 @@ class CustomerObject:
         self.company = data["customercompany"]
         self.email = data["customeremail"]
         self.phone = data["customerphone"]
+
+    def __eq__(self, r):
+        return self.id == r.id

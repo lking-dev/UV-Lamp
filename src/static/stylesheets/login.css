@@ -12,7 +12,7 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     padding-top: 42px;
     border-radius: 4px;
-    background-color: #12192c;
+    background-color: white;
     justify-content: center;
     display: flex;
 }
@@ -23,9 +23,19 @@
 
 #top-label {
     font-size: 30px;
-    color: white;
+    color: black;
     display: flex;
-    justify-content: center;
+    justify-content: left;
+    text-align: left;
+}
+
+#sub-label {
+    font-size: 14px;
+    color: black;
+    display: flex;
+    justify-content: left;
+    text-align: left;
+    margin-top: 4px;
 }
 
 #fail-label {
@@ -41,20 +51,20 @@
     font-size: 24px;
     height: 45px;
     border: 0;
-    color: grey;
-    border-bottom: 1px solid grey;
+    color: #404040;
+    border-bottom: 1px solid #404040;
     background: none;
     display: block;
     margin: 0 auto;
-    margin-top: 24px;
+    margin-top: 20px;
     transition: all 0.2s ease;
 }
 
 .textbox:focus {
     border: none;
     outline: none;
-    color: #e1d9ec;
-    border-bottom: 1px solid #e1d9ec;
+    color: black;
+    border-bottom: 1px solid black;
 }
 
 #submit-button {
@@ -68,7 +78,7 @@
     font-size: 24px;
     border-radius: 4px;
     transition-duration: .25s;
-    background-color: #296b60;
+    background-color: #08605F;
     border-radius: 4px;
     color: white;
     border-bottom: 2px solid rgba(0,0,0,0.1);
@@ -79,7 +89,7 @@
 }
 
 #submit-button:hover {
-    background-color: #26a791;
+    background-color: #0d9492;
 }
 
 body {
