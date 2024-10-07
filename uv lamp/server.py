@@ -1,5 +1,5 @@
 from flask import *
-import DBAccess
+from Data import Data
 from datetime import datetime
 import os
 
@@ -47,7 +47,7 @@ def login():
         session["username"] = request.form["form-fname"] + " " + request.form["form-lname"]
         session["userid"] = userid
 
-        database = DBAccess.DBAccess(database_path)
+        database = Data(database_path)
         
 
         return redirect(url_for("user_orders"))
@@ -65,7 +65,7 @@ def user_orders():
     if "username" not in session:
         return "You are not logged in! <br><a href = '/login'>" + "click here to log in</a>"
 
-    database = DBAccess.DBAccess(database_path)
+    database = Data(database_path)
     orders = database.searchOrdersForCustomer(session["userid"])
     
     return render_template("web/orders.html", orders = orders, username = session["username"])
@@ -75,7 +75,7 @@ def update_user_order(orderid):
     print("REQUEST TO UPDATE ORDER {} TO RE-INSTALLED".format(orderid))
     orderid = int(orderid)
 
-    database = DBAccess.DBAccess(database_path)
+    database = Data(database_path)
     order = database.searchOrderByID(orderid)
 
     order.status = 0
@@ -86,7 +86,7 @@ def update_user_order(orderid):
 
 @app.get("/customer_table")
 def customer_table():
-    database = DBAccess.DBAccess(database_path)
+    database = Data(database_path)
     rows = database.getAllCustomers()
 
     return render_template(
@@ -99,7 +99,7 @@ def customer_table():
 
 @app.get("/order_table")
 def order_table():
-    database = DBAccess.DBAccess(database_path)
+    database = Data(database_path)
     rows = database.getAllOrders()
 
     return render_template(
@@ -111,7 +111,7 @@ def order_table():
 
 @app.get("/reminder_table")
 def reminder_table():
-    database = DBAccess.DBAccess(database_path)
+    database = Data(database_path)
     rows = database.getAllReminders()
 
     return render_template(
@@ -124,7 +124,7 @@ def reminder_table():
 def try_login(firstname, lastname, email):
     print("LOGIN ATTEMPT FROM {} {} ({})".format(firstname, lastname, email))
     
-    database = DBAccess.DBAccess(database_path)
+    database = Data(database_path)
     user = database.searchCustomerByFields(firstname, lastname, email)
 
     if user is None:

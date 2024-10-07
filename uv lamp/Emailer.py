@@ -5,9 +5,12 @@ import json
 from sendgrid.helpers import mail
 
 class Emailer:
-    def __init__(self, email, key):
+    def __init__(self, email, key, logger_file):
         self.api = sendgrid.SendGridAPIClient(api_key = key)
         self.sender = mail.Email(email)
+
+    def printlog(log_file, msg):
+        log_file.write(datetime.now().strftime("[%X] ") + msg + "\n")
 
     # destination: email address to be sent to
     # subject: just string with the emails subject

@@ -1,9 +1,0 @@
-[16:28:35] Connected to database at C:\Users\lking\Desktop\UV-Lamp\uv lamp\orders.db
-[16:28:35] Sendgrid email client initialized
-[16:28:35] Searching for unscheduled reminders
-[16:28:35] Searching for overdue/unscheduled reminders for Order #0001
-[16:28:35] No reminder found! shceduling reminder for Order #0001
-[16:28:35] Searching for overdue/unscheduled reminders for Order #0002
-[16:28:35] Everything good for Order #0002
-[16:28:35] Searching for overdue/unscheduled reminders for Order #0003
-[16:28:35] Everything good for Order #0003
