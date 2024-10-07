@@ -17,5 +17,9 @@ class CustomerObject:
         self.email = data["customeremail"]
         self.phone = data["customerphone"]
 
+    # this single line of code method maintains the codes preformance over large databases
+    # used for checking if repeat customer
+    # this way i can seamlessly integrate it into the python checking, not write some garbage O(n) function to check
+    # which would be double the time anyways because it would run afterwords
     def __eq__(self, r):
         return self.id == r.id
