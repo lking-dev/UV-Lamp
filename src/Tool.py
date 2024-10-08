@@ -43,9 +43,10 @@ def main():
                 {"fullname": customer.firstname + " " + customer.lastname}
             )
         except:
-            print("Email to " + customer.email + " failed")
+            printlog(log_file, "Email to " + customer.email + " failed")
 
-    log_file.close()
+    printlog(log_file, "Finished.")
         
 if __name__ == "__main__":
     main()
+    log_file.close()

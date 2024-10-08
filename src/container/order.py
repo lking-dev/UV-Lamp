@@ -15,7 +15,6 @@ class OrderObject:
         2: "DELETED"
     }
 
-
     def __init__(self):
         self.id = None
         self.formattedid = None
@@ -23,8 +22,7 @@ class OrderObject:
         self.lastchanged = None
         self.customerid = None
         self.location = None
-        self.status = None
-        
+        self.status = None        
 
     def __init__(self, data):        
         self.id = data["orderid"]

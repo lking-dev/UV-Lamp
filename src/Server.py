@@ -33,11 +33,16 @@ columns_reminders = {
     "orderid": "Linked Order ID"
 }
 
-##############################################
-###                                        ###
-###   THINGS TO DO                         ###
-###                                        ###
-##############################################
+#######################################################
+###                                                 ###
+###   THINGS TO DO                                  ###
+###                                                 ###
+### - FIELDS FOR NOTES - TODO                       ###
+### - PASSWORDS - TODO                              ###
+### - UPDATES/CREATE/DELETE FORMS - IN PROGRESS     ###
+### - HISTORY - TODO                                ###
+###                                                 ###
+#######################################################
 
 """
 fields for notes
@@ -102,8 +107,16 @@ def user_orders():
 
     database = Data(database_path)
     orders = database.searchOrdersForCustomer(session["userid"])
+    orders = rearrange_orders(orders)
     
     return render_template("web/orders.html", orders = orders, username = session["username"])
+
+# method for rearranging orders to display the active orders first, then the deleted orders
+def rearrange_orders(orders):
+    active = [o for o in orders if o.status != 2]
+    inactive = [o for o in orders if o.status == 2]
+    return active + inactive
+
 
 # updates an orders status using POST and url arguments
 @app.post("/user_orders/update/status/<orderid>")
@@ -136,7 +149,7 @@ def delete_order(orderid):
 
 # creates an order using POST form
 @app.post("/user_orders/update/create")
-def delete_order():
+def create_order():
     print("REQUEST TO CREATE ORDER")
 
     new = OrderObject()

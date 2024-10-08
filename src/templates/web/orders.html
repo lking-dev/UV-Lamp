@@ -28,11 +28,18 @@
                             <td>
                                 <div class = "order">
                                     <label class = "order-heading">
-                                        <b>Order #{{ order.formattedid }}: </b>
+                                        {% if order.status == 2 %}
+                                            <b style = "color: grey;">Order #{{ order.formattedid }}: </b>
+                                        {% else %}
+                                            <b>Order #{{ order.formattedid }}: </b>
+                                        {% endif %}
+
                                         {% if order.status == 0 %}
                                             <b style = "color: green;">{{ order.order_statuses[order.status] }}</b>
                                         {% elif order.status == 1 %}
                                             <b style = "color: red;">{{ order.order_statuses[order.status] }}</b>
+                                        {% elif order.status == 2 %}
+                                            <b style = "color: grey;">{{ order.order_statuses[order.status] }}</b>
                                         {% endif %}
                                     </label>
                                     {% if order.status == 1 %}
@@ -40,9 +47,16 @@
                                             <input type = "submit" class = "link-button order-update" value = "Update Order Status"></input>
                                         </form>
                                     {% endif %}
-                                    <label class = "order-content">Order placed {{ order.placed }}</label>
-                                    <label class = "order-content">Last installation {{ order.placed }}</label>
-                                    <label class = "order-content">At {{ order.location }}</label>
+
+                                    {% if order.status != 2 %}
+                                        <label class = "order-content">Order placed {{ order.placed }}</label>
+                                        <label class = "order-content">Last installation {{ order.placed }}</label>
+                                        <label class = "order-content">At {{ order.location }}</label>
+                                    {% else %}
+                                        <label class = "order-content" style = "color: grey;">Order placed {{ order.placed }}</label>
+                                        <label class = "order-content" style = "color: grey;">Last installation {{ order.placed }}</label>
+                                        <label class = "order-content" style = "color: grey;">At {{ order.location }}</label>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
