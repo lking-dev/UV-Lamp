@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from datetime import datetime
 from sendgrid.helpers import mail
+import smtplib
+from email.mime.text import MIMEText
 
 class Emailer:
     def __init__(self, log_file, email, key):
@@ -22,11 +24,14 @@ class Emailer:
     # template_name: the html file to be loaded
     # context: context for said template
     def sendEmail(self, destination, subject, template_name, context):
+        # DEMO CODE FOR SENDING EMAIL USING ALTERNATE METHOD
+        self.sendEmailDemo(destination, subject, template_name, context)
+        return
+        # DELETE THIS CODE ONCE SENDGRID ISSUE RESOLVED
+
         template_path = os.path.dirname(os.path.realpath(__file__)) + "\\templates\\email\\"
         env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_path))
-        print(template_path)
         template = env.get_template(template_name)
-        print(template)
 
         recipient = mail.To(destination)
         content = mail.Content("text/html", template.render(context))
@@ -34,3 +39,25 @@ class Emailer:
         response = self.api.send(email)
         
         return response.status_code
+    
+    def sendEmailDemo(self, destination, subject, template_name, context):
+        host = "smtp.mail.yahoo.com"
+        port = 465
+        username = "lanmanking@yahoo.com"
+        password = "Aa1.Aa1."
+        sender = "lanmanking@yahoo.com"
+        destination = "lanmanking@yahoo.com"
+
+        template_path = os.path.dirname(os.path.realpath(__file__)) + "\\templates\\email\\"
+        env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_path))
+        template = env.get_template(template_name)
+
+        msg = MIMEText(template.render(context))
+        msg["Subject"] = subject
+        msg["From"] = sender
+        msg["To"] = destination
+
+        server = smtplib.SMTP_SSL(host, port)
+        server.login(username, password)
+        server.sendmail(sender, destination, msg.as_string())
+        server.quit()

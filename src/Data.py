@@ -13,7 +13,10 @@ class Data:
     def __init__(self, pathname):
         # connect to the database and get the cursor for execution
         self.connector = sqlite3.connect(pathname)
-        
+
+        # THIS LINE IS VERY, VERY IMPORTANT
+        # MAKES IT SO SQL RETURNS DATA AS A LIST OF DICTIONARIES INSTEAD OF LIST OF LISTS
+        # ALL CODE IS BASED ON THIS FACT
         self.connector.row_factory = sqlite3.Row
         self.cursor = self.connector.cursor()
 
@@ -24,20 +27,25 @@ class Data:
     ###   ADD FUNCTIONS   ###
     #########################
 
-    # creates a new customer
-    def addCustomer(self, customer_firstname, customer_lastname, customer_company, customer_email, customer_phone):
-        sql = "INSERT INTO Customers(customerfirstname, customerlastname, customercompany, customeremail, customerphone) VALUES(?, ?, ?, ?, ?)"
-        self.cursor.execute(sql, (customer_firstname, customer_lastname, customer_company, customer_email, customer_phone))
+    # creates a new order
+    def addOrder(self, order: OrderObject):
+        sql = """
+            INSERT INTO Orders(
+                orderplaced,
+                orderlastchanged,
+                customerid,
+                orderlocation,
+                orderstatus
+            ) INSERT VALUES (?, ?, ?, ?, ?);
+        """
 
-    # creates a new order and links it to a customer
-    def addOrder(self, customer_id, date_placed):
-        sql = "INSERT INTO Orders(ordercustomer, orderplaced, orderlastchanged) VALUES(?, ?, ?);"
-        self.cursor.execute(sql, (customer_id, date_placed, date_placed))
-
-    # creates a new reminder and links it to an order
-    def addReminder(self, orderid, reminder_date):
-        sql = "INSERT INTO Reminders(reminderdate, orderid) VALUES(?, ?);"
-        self.cursor.execute(sql, (reminder_date, orderid))
+        self.cursor.execute(sql, (
+            order.placed,
+            order.lastchanged,
+            order.customerid,
+            order.location,
+            order.status,
+        ))
 
         self.connector.commit()
 

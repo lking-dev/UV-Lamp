@@ -11,10 +11,22 @@
 class OrderObject:
     order_statuses = {
         0: "ALL GOOD",
-        1: "REPLACEMENT NEEDED"
+        1: "REPLACEMENT NEEDED",
+        2: "DELETED"
     }
 
-    def __init__(self, data):
+
+    def __init__(self):
+        self.id = None
+        self.formattedid = None
+        self.placed = None
+        self.lastchanged = None
+        self.customerid = None
+        self.location = None
+        self.status = None
+        
+
+    def __init__(self, data):        
         self.id = data["orderid"]
         self.formattedid = "{:04d}".format(self.id)
         self.placed = data["orderplaced"]

@@ -35,12 +35,15 @@ def main():
     printlog(log_file, "Sendgrid email client initialized")
 
     for customer in reminders:
-        emailclient.sendEmail(
-            "lanmanking@yahoo.com",
-            "Replacement for UV Lamp Filter",
-            config["template"],
-            {"fullname": customer.firstname + " " + customer.lastname}
-        )
+        try:
+            emailclient.sendEmail(
+                "lanmanking@yahoo.com",
+                "Replacement for UV Lamp Filter",
+                config["template"],
+                {"fullname": customer.firstname + " " + customer.lastname}
+            )
+        except:
+            print("Email to " + customer.email + " failed")
 
     log_file.close()
         
