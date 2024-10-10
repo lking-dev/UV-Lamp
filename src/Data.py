@@ -36,7 +36,7 @@ class Data:
                 customerid,
                 orderlocation,
                 orderstatus
-            ) INSERT VALUES (?, ?, ?, ?, ?);
+            ) VALUES (?, ?, ?, ?, ?);
         """
 
         self.cursor.execute(sql, (
@@ -46,6 +46,13 @@ class Data:
             order.location,
             order.status,
         ))
+
+        self.connector.commit()
+
+    # creates a new reminder and links it to an order
+    def addReminder(self, orderid, reminder_date):
+        sql = "INSERT INTO Reminders(reminderdate, orderid) VALUES(?, ?);"
+        self.cursor.execute(sql, (reminder_date, orderid))
 
         self.connector.commit()
 

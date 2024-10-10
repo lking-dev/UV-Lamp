@@ -111,30 +111,39 @@ def user_orders():
     
     return render_template("web/orders.html", orders = orders, username = session["username"])
 
+@app.get("/register_order")
+def register_order():
+    return render_template("web/register.html")
+
 # method for rearranging orders to display the active orders first, then the deleted orders
 def rearrange_orders(orders):
     active = [o for o in orders if o.status != 2]
     inactive = [o for o in orders if o.status == 2]
     return active + inactive
 
-
 # updates an orders status using POST and url arguments
-@app.post("/user_orders/update/status/<orderid>")
-def update_order_status(orderid):
-    print("REQUEST TO UPDATE ORDER {} TO RE-INSTALLED".format(orderid))
-    orderid = int(orderid)
-
+@app.get("/user_orders/update/<orderid>")
+def update_order_page(orderid):
     database = Data(database_path)
     order = database.searchOrderByID(orderid)
 
-    order.status = 0
-    order.lastchanged = datetime.strftime(datetime.now(), "%m/%d/%Y")
+    return render_template("web/update.html", order = order)
+
+@app.post("/user_orders/update/<orderid>")
+def update_order(orderid):
+    database = Data(database_path)
+    order = database.searchOrderByID(orderid)
+
+    order.placed = request.form["form-placed"]
+    order.lastchanged = request.form["form-last"]
+    order.location = request.form["form-location"]
+
     database.updateOrder(order)
 
     return redirect(url_for("user_orders"))
 
 # deletes an order using POST
-@app.post("/user_orders/update/delete/<orderid>")
+@app.get("/user_orders/update/delete/<orderid>")
 def delete_order(orderid):
     print("REQUEST TO DELETE ORDER {}".format(orderid))
     orderid = int(orderid)
@@ -157,7 +166,7 @@ def create_order():
     new.lastchanged = request.form["form-lastchanged"]
     new.customerid = session["userid"]
     new.location = request.form["form-location"]
-    new.status = 0
+    new.status = -1
 
     database = Data(database_path)
     database.addOrder(new)

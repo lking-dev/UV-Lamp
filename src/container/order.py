@@ -10,12 +10,13 @@
 
 class OrderObject:
     order_statuses = {
+        -1: "IN PROCESS",
         0: "ALL GOOD",
         1: "REPLACEMENT NEEDED",
         2: "DELETED"
     }
 
-    def __init__(self):
+    def setup_none(self):
         self.id = None
         self.formattedid = None
         self.placed = None
@@ -24,11 +25,14 @@ class OrderObject:
         self.location = None
         self.status = None        
 
-    def __init__(self, data):        
-        self.id = data["orderid"]
-        self.formattedid = "{:04d}".format(self.id)
-        self.placed = data["orderplaced"]
-        self.lastchanged = data["orderlastchanged"]
-        self.customerid = data["customerid"]
-        self.location = data["orderlocation"]
-        self.status = data["orderstatus"]
+    def __init__(self, data = None): 
+        if data == None:
+            self.setup_none()
+        else:       
+            self.id = data["orderid"]
+            self.formattedid = "{:04d}".format(self.id)
+            self.placed = data["orderplaced"]
+            self.lastchanged = data["orderlastchanged"]
+            self.customerid = data["customerid"]
+            self.location = data["orderlocation"]
+            self.status = data["orderstatus"]

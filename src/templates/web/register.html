@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel = "stylesheet" href = "static/stylesheets/register.css"/>
+    </head>
+    <body>
+        <div id = "main-div" class = "debug">
+            <form action = "/user_orders/update/create" method = "post">
+                <label id = "top-label"><b>Register Order</b></label>
+
+                <input type = "text" id = "form-placed" placeholder = "Date of Placement" name = "form-placed" class = "textbox" required>
+                <input type = "text" id = "form-lastchanged" placeholder = "Last Installed" name = "form-lastchanged" class = "textbox" required>
+                <input type = "text" id = "form-location" placeholder = "Install Address" name = "form-location" class = "textbox" required>
+                <button type = "submit" id = submit-button>Register New</button>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel = "stylesheet" href = "/static/stylesheets/update.css"/>
+    </head>
+    <body>
+        <div id = "main-div" class = "debug">
+            <form action = "/user_orders/update/{{ order.id }}" method = "POST">
+                <label id = "top-label"><b>Update Order {{ order.id }}</b></label>
+                <input type = "text" id = "order-date-input" placeholder = "Order Placement Date" name = "form-placed" class = "textbox" value = "{{ order.placed }}" required>
+                <input type = "text" id = "last-date-input" placeholder = "Order Last Changed" name = "form-last" class = "textbox" value = "{{ order.lastchanged }}" required>
+                <input type = "text" id = "address-input" placeholder = "Address" name = "form-location" class = "textbox" value = "{{ order.location }}" required>
+                <button type = "submit" id = submit-button>Update Information</button>
+            </form>
+        </div>
+    </body>
+</html>

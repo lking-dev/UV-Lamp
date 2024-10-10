@@ -44,7 +44,7 @@ class Emailer:
         host = "smtp.mail.yahoo.com"
         port = 465
         username = "lanmanking@yahoo.com"
-        password = "Aa1.Aa1."
+        password = "GeorgiaTech#1"
         sender = "lanmanking@yahoo.com"
         destination = "lanmanking@yahoo.com"
 

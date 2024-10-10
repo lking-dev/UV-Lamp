@@ -11,6 +11,7 @@
                     <i class = "fa fa-user-circle-o" id = "username-icon"></i>
                     {{ username }}
                 </label>
+                <a id = "new-button" href = "/register_order">Register New</a>
                 <form action = "/logout" method = "GET">
                     <input type = "submit" id = "logout-button" value = "Log Out"></input>
                 </form>
@@ -40,22 +41,24 @@
                                             <b style = "color: red;">{{ order.order_statuses[order.status] }}</b>
                                         {% elif order.status == 2 %}
                                             <b style = "color: grey;">{{ order.order_statuses[order.status] }}</b>
+                                        {% elif order.status == -1 %}
+                                            <b style = "color: black;">{{ order.order_statuses[order.status] }}</b>
                                         {% endif %}
                                     </label>
-                                    {% if order.status == 1 %}
-                                        <form action = "/user_orders/update/{{ order.id }}" method = "POST">
-                                            <input type = "submit" class = "link-button order-update" value = "Update Order Status"></input>
-                                        </form>
-                                    {% endif %}
 
                                     {% if order.status != 2 %}
                                         <label class = "order-content">Order placed {{ order.placed }}</label>
                                         <label class = "order-content">Last installation {{ order.placed }}</label>
                                         <label class = "order-content">At {{ order.location }}</label>
                                     {% else %}
-                                        <label class = "order-content" style = "color: grey;">Order placed {{ order.placed }}</label>
-                                        <label class = "order-content" style = "color: grey;">Last installation {{ order.placed }}</label>
-                                        <label class = "order-content" style = "color: grey;">At {{ order.location }}</label>
+                                        <label class = "order-content" style = "color: grey; text-decoration: line-through;">Order placed {{ order.placed }}</label>
+                                        <label class = "order-content" style = "color: grey; text-decoration: line-through;">Last installation {{ order.placed }}</label>
+                                        <label class = "order-content" style = "color: grey; text-decoration: line-through;">At {{ order.location }}</label>
+                                    {% endif %}
+                                    
+                                    {% if order.status != 2 %}
+                                        <a href = "/user_orders/update/{{ order.id }}" class = "order-content" style = "margin-top: 4px;">Update Information</a>
+                                        <a href = "/user_orders/update/delete/{{ order.id }}" class = "order-content">Remove Order</a>
                                     {% endif %}
                                 </div>
                             </td>

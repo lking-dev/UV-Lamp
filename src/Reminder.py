@@ -49,11 +49,16 @@ class Reminder:
                 if self.testReminder(order, reminder):
                     customer = self.database.searchCustomerByID(order.customerid)
                     
+                    copy = order;
+                    copy.status = 0
+                    self.database.updateOrder(copy)
+                    
                     if customer not in customers:
                         customers.append(customer)
 
                     needed_reminder += 1
                 else:
+                    self.database.updateOrder(order)
                     needed_nothing += 1
             # if no reminder, schedule a new one
             else:

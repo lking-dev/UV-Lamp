@@ -42,8 +42,9 @@ def main():
                 config["template"],
                 {"fullname": customer.firstname + " " + customer.lastname}
             )
+            printlog(log_file, "Send email to " + customer.email)
         except:
-            printlog(log_file, "Email to " + customer.email + " failed")
+            printlog(log_file, "Failed to send email to " + customer.email)
 
     printlog(log_file, "Finished.")
         
