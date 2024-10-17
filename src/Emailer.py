@@ -12,8 +12,12 @@ class Emailer:
     def __init__(self, log_file, email, key):
         self.api = sendgrid.SendGridAPIClient(api_key = key)
         self.sender = mail.Email(email)
+        self.log_file = log_file
 
     def printlog(self, log_file, msg):
+        if log_file is None:
+            return
+        
         fmt_msg = datetime.now().strftime("[%X]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
         print(fmt_msg)
         log_file.write(fmt_msg + "\n")
@@ -24,11 +28,6 @@ class Emailer:
     # template_name: the html file to be loaded
     # context: context for said template
     def sendEmail(self, destination, subject, template_name, context):
-        # DEMO CODE FOR SENDING EMAIL USING ALTERNATE METHOD
-        self.sendEmailDemo(destination, subject, template_name, context)
-        return
-        # DELETE THIS CODE ONCE SENDGRID ISSUE RESOLVED
-
         template_path = os.path.dirname(os.path.realpath(__file__)) + "\\templates\\email\\"
         env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_path))
         template = env.get_template(template_name)
@@ -61,3 +60,12 @@ class Emailer:
         server.login(username, password)
         server.sendmail(sender, destination, msg.as_string())
         server.quit()
+
+def test():
+
+    emailer = Emailer(None, "lking@diversitech.com", "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")
+    result = emailer.sendEmail("lanmanking@yahoo.com", "Test!", "reminder.html", {"fullname": "Landry M. King"})
+    print(result)
+
+if __name__ == "__main__":
+    test()

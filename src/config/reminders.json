@@ -3,7 +3,7 @@
         "reminder_period": 1095,
         "template": "reminder.html",
         "sender": "mesbrook@diversitech.com",
-        "api": "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",
+        "api": null,
         "log_enabled": true,
         "log_directory": "/log/"
 }

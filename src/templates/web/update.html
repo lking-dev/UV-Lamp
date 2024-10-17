@@ -5,7 +5,7 @@
     </head>
     <body>
         <div id = "main-div" class = "debug">
-            <form action = "/user_orders/update/{{ order.id }}" method = "POST">
+            <form action = "/api/order/{{ order.id }}/update" method = "POST">
                 <label id = "top-label"><b>Update Order {{ order.id }}</b></label>
                 <input type = "text" id = "order-date-input" placeholder = "Order Placement Date" name = "form-placed" class = "textbox" value = "{{ order.placed }}" required>
                 <input type = "text" id = "last-date-input" placeholder = "Order Last Changed" name = "form-last" class = "textbox" value = "{{ order.lastchanged }}" required>

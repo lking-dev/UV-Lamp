@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel = "stylesheet" href = "static/stylesheets/orders.css"/>
+        <link rel = "stylesheet" href = "/static/stylesheets/orders.css"/>
         <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
@@ -11,8 +11,8 @@
                     <i class = "fa fa-user-circle-o" id = "username-icon"></i>
                     {{ username }}
                 </label>
-                <a id = "new-button" href = "/register_order">Register New</a>
-                <form action = "/logout" method = "GET">
+                <a id = "new-button" href = "/pages/register_order">Register New</a>
+                <form action = "/pages/logout" method = "GET">
                     <input type = "submit" id = "logout-button" value = "Log Out"></input>
                 </form>
             </div>
@@ -57,8 +57,8 @@
                                     {% endif %}
                                     
                                     {% if order.status != 2 %}
-                                        <a href = "/user_orders/update/{{ order.id }}" class = "order-content" style = "margin-top: 4px;">Update Information</a>
-                                        <a href = "/user_orders/update/delete/{{ order.id }}" class = "order-content">Remove Order</a>
+                                        <a href = "/pages/update_order/{{ order.id }}" class = "order-content" style = "margin-top: 4px;">Update Information</a>
+                                        <a href = "/api/order/{{ order.id }}/delete" class = "order-content">Remove Order</a>
                                     {% endif %}
                                 </div>
                             </td>

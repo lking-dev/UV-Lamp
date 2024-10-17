@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel = "stylesheet" href = "static/stylesheets/login.css"/>
+        <link rel = "stylesheet" href = "/static/stylesheets/login.css"/>
     </head>
     <body>
         <div id = "main-div" class = "debug">
-            <form action = "/login" method = "post">
+            <form action = "/pages/login" method = "post">
                 <label id = "top-label"><b>Sign in</b></label>
                 {% if failed == True %}
                     <label id = "fail-label">Failed to login! Please try again</label>
