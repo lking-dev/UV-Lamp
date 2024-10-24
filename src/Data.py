@@ -23,6 +23,9 @@ class Data:
         # flag for the connections status
         self.connected = True
 
+    def forceCommit(self):
+        self.connector.commit()
+
     #########################
     ###   ADD FUNCTIONS   ###
     #########################
@@ -55,6 +58,17 @@ class Data:
         self.cursor.execute(sql, (reminder_date, orderid))
 
         self.connector.commit()
+
+    ############################
+    ###   DELETE FUNCTIONS   ###
+    ############################
+    
+
+    # removes a reminder
+    def delReminder(self, reminder):
+        sql = "DELETE FROM Reminders WHERE reminderid = ?;"
+        self.cursor.execute(sql, [(reminder.id)])
+        self.forceCommit()
 
     #############################
     ###   GET ALL FUNCTIONS   ###

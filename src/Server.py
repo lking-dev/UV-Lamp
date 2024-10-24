@@ -106,8 +106,13 @@ def update_order(orderid):
     order.placed = request.form["form-placed"]
     order.lastchanged = request.form["form-last"]
     order.location = request.form["form-location"]
+    order.status = 1
 
     database.updateOrder(order)
+    
+    reminder = database.searchRemindersForOrder(order.id)
+    if reminder:
+        database.delReminder(reminder)
 
     return redirect("/pages/orders")
 
@@ -120,7 +125,7 @@ def delete_order(orderid):
     database = Data(database_path)
     order = database.searchOrderByID(orderid)
 
-    order.status = 2
+    order.status = -1
     database.updateOrder(order)
 
     return redirect("/pages/orders")
@@ -135,7 +140,7 @@ def create_order():
     new.lastchanged = request.form["form-lastchanged"]
     new.customerid = session["userid"]
     new.location = request.form["form-location"]
-    new.status = -1
+    new.status = 1
 
     database = Data(database_path)
     database.addOrder(new)
@@ -208,7 +213,7 @@ def rearrange_orders(orders):
 
 # main method that sets up and runs the server
 def main():
-    app.run()
+    app.run(host = "10.10.101.221", port=80)
 
 if __name__ == "__main__":
     main()

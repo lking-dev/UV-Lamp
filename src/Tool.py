@@ -12,7 +12,7 @@ from Reminder import Reminder
 path = os.path.dirname(os.path.realpath(__file__))
 
 def printlog(log_file, msg):
-    fmt_msg = datetime.now().strftime("[%X]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
+    fmt_msg = datetime.now().strftime("[%I:%M]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
     print(fmt_msg)
     log_file.write(fmt_msg + "\n")
 
@@ -29,11 +29,11 @@ def main():
     
     reminder = Reminder(database, log_file)
     printlog(log_file, "Searching for unscheduled reminders")
-    reminders = reminder.getReminders()
+    reminders = reminder.updateReminders()
 
     emailclient = Emailer(email = config["sender"], key = config["api"], log_file = log_file)
     printlog(log_file, "Sendgrid email client initialized")
-
+    return
     for customer in reminders:
         try:
             emailclient.sendEmail(

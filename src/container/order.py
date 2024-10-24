@@ -10,10 +10,10 @@
 
 class OrderObject:
     order_statuses = {
-        -1: "IN PROCESS",
+        -1: "DELETED",
         0: "ALL GOOD",
-        1: "REPLACEMENT NEEDED",
-        2: "DELETED"
+        1: "IN PROCESS",
+        2: "NEEDS REPLACEMENT"
     }
 
     def setup_none(self):

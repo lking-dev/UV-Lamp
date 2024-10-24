@@ -17,61 +17,68 @@ class Reminder:
         self.log_file = log_file
     
     def printlog(self, log_file, msg):
-        fmt_msg = datetime.now().strftime("[%X]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
+        fmt_msg = datetime.now().strftime("[%I:%M]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
         print(fmt_msg)
         log_file.write(fmt_msg + "\n")
-
-    def repeatCustomer(self, customers, test):
-        for customer in customers:
-            if customer.id == test.id:
-                return True
-            
-        return False
     
-    # goes through all orders and takes action depending on the orders reminders
-    def getReminders(self):
+    # core logic for reminder system
+    # returns a python list of tuples of customer objects to related order objects
+    # ex: [
+    #   (Customer1, Order1),
+    #   (Customer2, Order2)
+    # ]
+    # LOGIC IS SPLIT INTO 2 SECTIONS TO MAKE SURE EVERYTHING IS COVERED IN ONE FUNCTION CALL
+
+    # STATUS TABLE:
+    # -1: DELETED
+    #  0: ALL GOOD
+    #  1: IN PROCESS
+    #  2: NEEDS REPLACEMENT
+
+    def updateReminders(self):
         # fetch the order data
         data = self.database.getAllOrders()
-        customers = []
+        relevant = [order for order in data if order.status != -1]
+        output = []
 
-        needed_reminder = 0
-        needed_scheduling = 0
-        needed_nothing = 0
+        # FIRST RUN: MAKES SURE EVERYTHING HAS AN APPROPRIATE ORDER
 
-        self.printlog(self.log_file, "Handling Reminders...")
-        
-        for order in data:
-            # try and get the assoociated reminder for the order
+        self.printlog(self.log_file, "BEGINNING SEARCHING")
+
+        for order in relevant:
             reminder = self.database.searchRemindersForOrder(order.id)
+            customer = self.database.searchCustomerByID(order.customerid)
 
-            # if there is a reminder, check if action needs to be taken
-            if reminder:
-                if self.testReminder(order, reminder):
-                    customer = self.database.searchCustomerByID(order.customerid)
-                    
-                    copy = order;
-                    copy.status = 0
-                    self.database.updateOrder(copy)
-                    
-                    if customer not in customers:
-                        customers.append(customer)
-
-                    needed_reminder += 1
-                else:
-                    self.database.updateOrder(order)
-                    needed_nothing += 1
-            # if no reminder, schedule a new one
-            else:
+            if reminder is None:
+                self.printlog(self.log_file, "Order " + order.formattedid + " (Placed by " + customer.fullname + ") does not have a reminder! Scheduling one.")
                 self.scheduleReminder(order)
-                needed_scheduling += 1
+            else:
+                self.printlog(self.log_file, "Order " + order.formattedid + " (Placed by " + customer.fullname + ") has a reminder scheduled.")
 
-        self.printlog(self.log_file, "Finished.")
-        self.printlog(self.log_file, "Found {} Unscheduled Orders".format(needed_scheduling))
-        self.printlog(self.log_file, "Found {} Overdue Orders".format(needed_reminder))
-        self.printlog(self.log_file, "Found {} Compliant Orders".format(needed_nothing))
-        self.printlog(self.log_file, "Searched {} Orders Total".format(len(data)))
-        
-        return customers
+        self.printlog(self.log_file, "END SEARCHING")
+
+        data = self.database.getAllOrders()
+        relevant = [order for order in data if order.status != -1]
+
+        self.printlog(self.log_file, "BEGINNING FLAGGING")
+
+        for order in relevant:
+            reminder = self.database.searchRemindersForOrder(order.id)
+            due = self.testReminder(order, reminder)
+            if due:
+                order.status = 2
+                self.printlog(self.log_file, "Flagged Order #" + order.formattedid + " as NEEDS MAINTENCE")
+            else:
+                if order.status != 0:
+                    self.printlog(self.log_file, "Flagged Order #" + order.formattedid + " as ALL GOOD")
+                self.printlog(self.log_file, "Order #" + order.formattedid + " needs no updates, skipping.")
+
+            self.database.updateOrder(order)
+
+        self.printlog(self.log_file, "END FLAGGING")
+
+        self.database.forceCommit()
+
 
     # determines the rout of action to be taken on a reminder
     def testReminder(self, order, reminder):

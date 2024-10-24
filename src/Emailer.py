@@ -18,7 +18,7 @@ class Emailer:
         if log_file is None:
             return
         
-        fmt_msg = datetime.now().strftime("[%X]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
+        fmt_msg = datetime.now().strftime("[%I:%M]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
         print(fmt_msg)
         log_file.write(fmt_msg + "\n")
 

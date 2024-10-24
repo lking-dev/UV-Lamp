@@ -13,6 +13,7 @@ class CustomerObject:
         self.id = data["customerid"]
         self.firstname = data["customerfirstname"]
         self.lastname = data["customerlastname"]
+        self.fullname = self.firstname + " " + self.lastname
         self.company = data["customercompany"]
         self.email = data["customeremail"]
         self.phone = data["customerphone"]
