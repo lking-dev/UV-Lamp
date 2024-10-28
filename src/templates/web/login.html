@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
+        <link rel = "stylesheet" href = "/static/stylesheets/login.css"/>
         <link rel = "stylesheet" href = "login.css"/>
         <meta name="viewport" content="width=device-width,initial-scale=1">
     </head>
-    <body style = "height: 100vh;">
+    <body style = "height: 100vh; width: 100vw;">
         <div id = "login-div">
             <form action = "/pages/login" method = "post">
-                <div>
-                    <input type = "email" id = "email-input" class = "input-element" placeholder = "First Name" name = "form-email" required>
-                    <input type = "text" id = "pword-input" class = "input-element" placeholder = "Last Name" name = "form-pword" required>
-                    <button type = "submit" id = "submit-input" class = "input-element">Sign in</button>
-                </div>
+                <label id = "signin-label">Sign in</label>
+                <label id = "signup-label">Dont have an account?<a href = "/pages/signup"> Create One!</a></label>
+                <input type = "email" id = "email-input" class = "input-element textbox" placeholder = "Email Address" name = "form-email" required>
+                <input type = "text" id = "pword-input" class = "input-element textbox" placeholder = "Password" name = "form-pword" required>
+                <button type = "submit" id = "submit-input" class = "input-element">Sign in</button>
             </form>
         </div>
     </body>

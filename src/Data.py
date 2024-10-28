@@ -103,14 +103,14 @@ class Data:
         return CustomerObject(self.cursor.fetchone())
 
     # search customer using firstname/lastname/email fields
-    def searchCustomerByFields(self, firstname, lastname, email):
-        sql = "SELECT * FROM Customers WHERE customerfirstname = ? AND customerlastname = ? AND customeremail = ? LIMIT 1;"
-        self.cursor.execute(sql, (firstname, lastname, email))
+    def customerLoginSearch(self, email, password):
+        sql = "SELECT * FROM Customers WHERE customeremail = ? AND customerpassword = ? LIMIT 1;"
+        self.cursor.execute(sql, (email, password))
 
         result = self.cursor.fetchone()
         if not result:
             return None
-        return CustomerObject(result)
+        return CustomerObject(result).id
 
     # find order by id
     def searchOrderByID(self, id):

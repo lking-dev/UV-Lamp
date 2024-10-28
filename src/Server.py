@@ -49,15 +49,12 @@ def login_page():
 # either sends user to their orders or redirects to the login page with an error message
 @app.post("/pages/login")
 def login():
-    userid = try_login(request.form["form-fname"], request.form["form-lname"], request.form["form-email"])
+    userid = try_login(request.form["form-email"], request.form["form-pword"])
 
     if not userid:
         return render_template("web/login.html", failed = True)
     else:
-        session["username"] = request.form["form-fname"] + " " + request.form["form-lname"]
         session["userid"] = userid
-
-        database = Data(database_path)
 
         return redirect("/pages/orders")
     
@@ -70,17 +67,21 @@ def logout():
         session.clear()
         return redirect("/pages/login")
     
+@app.get("/pages/signup")
+def signup():
+    return "this page isnt implemented yet LOL"
+
 # user orders page, the heart of the website, displays all the orders that the user has 
 @app.get("/pages/orders")
 def user_orders():
-    if "username" not in session:
+    if "userid" not in session:
         return "You are not logged in! <br><a href = '/login'>" + "click here to log in</a>"
 
     database = Data(database_path)
     orders = database.searchOrdersForCustomer(session["userid"])
     orders = rearrange_orders(orders)
     
-    return render_template("web/orders.html", orders = orders, username = session["username"])
+    return render_template("web/orders.html", orders = orders, username = "username")
 
 @app.get("/pages/register_order")
 def register_order():
@@ -195,15 +196,15 @@ def reminder_table():
 #########################
 
 # try login: determines a login requests validity
-def try_login(firstname, lastname, email):
-    print("LOGIN ATTEMPT FROM {} {} ({})".format(firstname, lastname, email))
+def try_login(email, password):
+    print("LOGIN ATTEMPT FROM {} WITH LOGIN {}".format(email, password))
     
     database = Data(database_path)
-    user = database.searchCustomerByFields(firstname, lastname, email)
+    userid = database.customerLoginSearch(email, password)
 
-    if user is None:
+    if userid is None:
         return None
-    return user.id
+    return userid
 
 # method for rearranging orders to display the active orders first, then the deleted orders
 def rearrange_orders(orders):
