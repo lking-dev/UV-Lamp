@@ -38,6 +38,8 @@ columns_reminders = {
 # the home page, redirects any default requests to the login page
 @app.route("/")
 def index():
+    return render_template("web/info.html")
+    # DELETE ABOVE LINE! FOR TESTING ONLY
     return redirect("/pages/login")
 
 # the actual login page, for GET requests 

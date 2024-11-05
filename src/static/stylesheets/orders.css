@@ -3,184 +3,46 @@
     font-family: "Roboto", sans-serif;
 }
 
-#wrapper-div {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 2.5%;
-    height: 600px;
-    width: 55%;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 8px;
-    background-color: #f0f0f0;
-    display: flex;
-}
-
 #main-div {
-    padding-left: 32px;
-    padding-right: 32px;
-    padding-top: 24px;
-    padding-bottom: 24px;
-
-    flex-grow: 1;
-    overflow-y: scroll;
-}
-
-#side-div {
-    flex-grow: 1;
-    max-width: 15%;
-    /* background-color: #4F7CAC; */
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-
-    background-color: #08605F;
-
-    align-content: center;
-    display: flex;
-    padding: 20px;
-    padding-top: 32px;
-    position: relative;
-}
-
-#username-display {
     width: 100%;
-    height: 20px;
-    font-size: 20px;
-
-    position: absolute;
-    left: 20px;
-    top: 20px;
-
-    color: white;
-}
-
-#new-button {
-    width: 100%;
-    height: 20px;
-    font-size: 16px;
-
-    position: absolute;
-    left: 20px;
-    bottom: 48px;
-    text-align: left;
-    text-decoration: none;
-
-    color: #C0C0C0;
-}
-
-#new-button:hover {
-    cursor: pointer;
-    color: white;
-}
-
-#logout-button {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-
-    color: #C0C0C0;
-    font-size: 16px;
-    text-align: left;
-    padding-left: 0;
-}
-
-#logout-button:hover {
-    color: white;
-}
-
-#username-icon {
-    margin-right: 4px;
-}
-
-.order-row {
-    display: flex;
-    width: 100%;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.order {
-    padding: 10px;
-    display: grid;
-}
-
-.link-button { 
-    background: none;
-    border: none;
-    color: #1a0dab;
-    text-decoration: none;
-    font-size: 12px;
-    text-align: left;
-}
-
-.link-button:hover {
-    text-decoration: underline;
-    cursor: pointer; 
-}
-
-.order-heading {
-    font-size: 16px;
-}
-
-.text-glow-red {
-    text-shadow:1px 1px 20px red, 1px 1px 20px white;
-}
-
-.order-update {
-    font-size: 12px;
-    margin-bottom: 4px;
-    text-decoration: none;
-}
-
-.order-update:hover {
-    text-decoration: underline;
-}
-
-.order-content {
-    margin-top: 2px;
-    font-size: 14px;
-    text-decoration: 0;
-}
-
-#header-div {
-    align-content: center;
-    background-color: #f0f0f0;
-    margin-bottom: 24px;
-    width: 100%;
-    display: flex;
-}
-
-#table-label {
-    font-size: 24px;
-    float: right;
-}
-
-#count-label {
-    font-size: 24px;
-    float: left;
-    width: 250px;
-}
-
-#main-table {
-    border-collapse: collapse;
-    background-color: white;
-    width: 100%;
-    border-radius: 6px;
-}
-
-.order-row td {
-    border: 16px;
-}
-
-.debug {
-    /*border: 5px solid green;*/
-}
-
-body {
-    
-}
-
-html {
     height: 100%;
+    background-color: rgb(243, 243, 243);
+    padding: 32px;
+}
+
+#orders-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-row {
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+}
+
+.table-item {
+    background-color: white;
+    border-radius: 8px;
+    font-size: 36px;
+
+    width: 100%;
+    height: 200px;
+
+    display: block;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.item-wrapper {
+    height: 100%;
+    width: 100%;
+    align-content: center;
+}
+
+.location-thumbnail {
+    position: relative;
+    left: 16px;
+    height: 80%;
+    border-radius: 10px;
 }

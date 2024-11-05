@@ -22,10 +22,10 @@ def geolocate(address: str, key: str = api_key):
     return location
 
 def main():
-    location = geolocate("9538 Kingston Crossing Cir., Johns Creek, GA")
-    print(location)
-    request = construct_request(location = location, size = (600, 480), fov = 120)
+    request = construct_request(location = geolocate("9538 Kingston Crossing Cir., Johns Creek, GA"), size = (600, 480), fov = 60)
+    request2 = construct_request(location = geolocate("5575 State Bridge Rd, Johns Creek, GA 30022"), size = (600, 480), fov = 120)
     webbrowser.open(request)
+    webbrowser.open(request2)
 
 if __name__ == "__main__":
     main()

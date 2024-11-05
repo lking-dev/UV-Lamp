@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel = "stylesheet" href = "/static/stylesheets/orders.css"/>
+        <link rel = "stylesheet" href = "orders.css"/>
+        <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div id = wrapper-div>
+            <div id = "side-div">
+                <label id = "username-display">
+                    <i class = "fa fa-user-circle-o" id = "username-icon"></i>
+                    {{ username }}
+                </label>
+                <a id = "new-button" href = "/pages/register_order">Register New</a>
+                <form action = "/pages/logout" method = "GET">
+                    <input type = "submit" id = "logout-button" value = "Log Out"></input>
+                </form>
+            </div>
+            <div id = "main-div">
+                <div id = "header-div" class = "debug">
+                    <label id = "table-label" style = "width: 100%; display: flex;">
+                        <b>Your Ordadaddaers</b>
+                    </label>
+                    <label id = "count-label">
+                        <b>({{ orders|length }} Orders Total)</b>
+                    </label>
+                </div>
+                <table id = "main-table" class = "debug">
+                    <tbody>
+                        {% for order in orders %}
+                        <tr class = "order-row">
+                            <td>
+                                <div class = "order">
+                                    <label class = "order-heading">
+                                        {% if order.status == -1 %}
+                                            <b style = "color: grey;">Order #{{ order.formattedid }}: </b>
+                                        {% else %}
+                                            <b>Order #{{ order.formattedid }}: </b>
+                                        {% endif %}
+
+                                        {% if order.status == 0 %}
+                                            <b style = "color: green;">{{ order.order_statuses[order.status] }}</b>
+                                        {% elif order.status == 2 %}
+                                            <b style = "color: red;">{{ order.order_statuses[order.status] }}</b>
+                                        {% elif order.status == -1 %}
+                                            <b style = "color: grey;">{{ order.order_statuses[order.status] }}</b>
+                                        {% elif order.status == 1 %}
+                                            <b style = "color: black;">{{ order.order_statuses[order.status] }}</b>
+                                        {% endif %}
+                                    </label>
+
+                                    {% if order.status != -1 %}
+                                        <label class = "order-content">Order placed {{ order.placed }}</label>
+                                        <label class = "order-content">Last installation {{ order.placed }}</label>
+                                        <label class = "order-content">At {{ order.location }}</label>
+                                    {% else %}
+                                        <label class = "order-content" style = "color: grey; text-decoration: line-through;">Order placed {{ order.placed }}</label>
+                                        <label class = "order-content" style = "color: grey; text-decoration: line-through;">Last installation {{ order.placed }}</label>
+                                        <label class = "order-content" style = "color: grey; text-decoration: line-through;">At {{ order.location }}</label>
+                                    {% endif %}
+                                    
+                                    {% if order.status != -1 %}
+                                        <a href = "/pages/update_order/{{ order.id }}" class = "order-content" style = "margin-top: 4px;">Update Information</a>
+                                        <a href = "/api/order/{{ order.id }}/delete" class = "order-content">Remove Order</a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
