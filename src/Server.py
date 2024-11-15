@@ -3,6 +3,7 @@ from Data import Data
 from datetime import datetime
 from container import order
 from container.order import OrderObject
+from container.history import HistoryEvent
 import os
 
 app = Flask(__name__)
@@ -77,13 +78,27 @@ def signup():
 @app.get("/pages/orders")
 def user_orders():
     if "userid" not in session:
-        return "You are not logged in! <br><a href = '/login'>" + "click here to log in</a>"
+        return "You are not logged in! <br><a href = '/pages/login'>" + "click here to log in</a>"
 
     database = Data(database_path)
     orders = database.searchOrdersForCustomer(session["userid"])
     orders = rearrange_orders(orders)
     
     return render_template("web/orders.html", orders = orders, username = "username")
+
+@app.get("/pages/orders/<orderid>")
+def more_info_page(orderid):
+    if "userid" not in session:
+        return "You are not logged in! <br><a href = '/pages/login'>" + "click here to log in</a>"
+
+    database = Data(database_path)
+    
+    order = database.searchOrderByID(orderid)
+    customer = database.searchCustomerByID(order.customerid)
+    history = database.searchHistoryForOrder(orderid)
+    location = database.searchLocationByID(order.locationid)
+
+    return render_template("web/info_template.html", order=order, customer=customer, history=history, location=location)
 
 @app.get("/pages/register_order")
 def register_order():
@@ -112,6 +127,7 @@ def update_order(orderid):
     order.status = 1
 
     database.updateOrder(order)
+    database.addHistory()
     
     reminder = database.searchRemindersForOrder(order.id)
     if reminder:
@@ -146,7 +162,10 @@ def create_order():
     new.status = 1
 
     database = Data(database_path)
-    database.addOrder(new)
+    orderid = database.addOrder(new)
+
+    history_msg = HistoryEvent.eventMsg["creation"]
+    database.addHistory(get_current_date(), history_msg, orderid)
 
     return redirect("/pages/orders")
 
@@ -208,6 +227,11 @@ def try_login(email, password):
         return None
     return userid
 
+def get_current_date():
+    now = datetime.now()
+    date = datetime.strptime(now, "%m/%d/%Y")
+    return date
+
 # method for rearranging orders to display the active orders first, then the deleted orders
 def rearrange_orders(orders):
     active = [o for o in orders if o.status != 2]
@@ -216,7 +240,7 @@ def rearrange_orders(orders):
 
 # main method that sets up and runs the server
 def main():
-    app.run(host = "10.10.101.221", port=80)
+    app.run(host = "10.10.10.146", port=80)
 
 if __name__ == "__main__":
     main()

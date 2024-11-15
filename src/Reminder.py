@@ -16,11 +16,6 @@ class Reminder:
         self.database = connector
         self.log_file = log_file
     
-    def printlog(self, log_file, msg):
-        fmt_msg = datetime.now().strftime("[%I:%M]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
-        print(fmt_msg)
-        log_file.write(fmt_msg + "\n")
-    
     # core logic for reminder system
     # returns a python list of tuples of customer objects to related order objects
     # ex: [
@@ -43,39 +38,24 @@ class Reminder:
 
         # FIRST RUN: MAKES SURE EVERYTHING HAS AN APPROPRIATE ORDER
 
-        self.printlog(self.log_file, "BEGINNING SEARCHING")
-
         for order in relevant:
             reminder = self.database.searchRemindersForOrder(order.id)
             customer = self.database.searchCustomerByID(order.customerid)
 
             if reminder is None:
-                self.printlog(self.log_file, "Order " + order.formattedid + " (Placed by " + customer.fullname + ") does not have a reminder! Scheduling one.")
                 self.scheduleReminder(order)
-            else:
-                self.printlog(self.log_file, "Order " + order.formattedid + " (Placed by " + customer.fullname + ") has a reminder scheduled.")
-
-        self.printlog(self.log_file, "END SEARCHING")
 
         data = self.database.getAllOrders()
         relevant = [order for order in data if order.status != -1]
 
-        self.printlog(self.log_file, "BEGINNING FLAGGING")
 
         for order in relevant:
             reminder = self.database.searchRemindersForOrder(order.id)
             due = self.testReminder(order, reminder)
             if due:
                 order.status = 2
-                self.printlog(self.log_file, "Flagged Order #" + order.formattedid + " as NEEDS MAINTENCE")
-            else:
-                if order.status != 0:
-                    self.printlog(self.log_file, "Flagged Order #" + order.formattedid + " as ALL GOOD")
-                self.printlog(self.log_file, "Order #" + order.formattedid + " needs no updates, skipping.")
 
             self.database.updateOrder(order)
-
-        self.printlog(self.log_file, "END FLAGGING")
 
         self.database.forceCommit()
 

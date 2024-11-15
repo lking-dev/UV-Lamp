@@ -9,18 +9,9 @@ import smtplib
 from email.mime.text import MIMEText
 
 class Emailer:
-    def __init__(self, log_file, email, key):
+    def __init__(self, email, key):
         self.api = sendgrid.SendGridAPIClient(api_key = key)
         self.sender = mail.Email(email)
-        self.log_file = log_file
-
-    def printlog(self, log_file, msg):
-        if log_file is None:
-            return
-        
-        fmt_msg = datetime.now().strftime("[%I:%M]") + " " + "[{}]".format(Path(__file__).name) + " " + msg
-        print(fmt_msg)
-        log_file.write(fmt_msg + "\n")
 
     # destination: email address to be sent to
     # subject: just string with the emails subject

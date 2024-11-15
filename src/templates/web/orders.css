@@ -26,7 +26,7 @@
     border-radius: 8px;
 
     width: 100%;
-    height: 325px;
+    height: 350px;
 
     display: block;
     margin-bottom: 20px;
@@ -52,34 +52,34 @@
     left: 320px;
     top: 20px;
 
-    font-size: 36px;
+    font-size: 48px;
     font-weight: bold;
 }
 
 .location-label {
     position: absolute;
     left: 320px;
-    top: 70px;
+    top: 80px;
 
-    font-size: 26px;
+    font-size: 36px;
     font-weight: italic;
 }
 
 .next-change-label {
     position: absolute;
     left: 320px;
-    top: 100px;
+    top: 130px;
 
-    font-size: 26px;
+    font-size: 36px;
     font-weight: italic;
 }
 
 .location-link {
     position: absolute;
     left: 20px;
-    top: 254px;
+    top: 260px;
 
-    font-size: 24px;
+    font-size: 36px;
 
     background-color: black;
     color: white;
@@ -94,9 +94,9 @@
 .more-link {
     position: absolute;
     right: 20px;
-    bottom: 20px;
+    top: 260px;
 
-    font-size: 24px;
+    font-size: 36px;
 
     background-color: black;
     color: white;

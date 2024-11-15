@@ -11,7 +11,7 @@
 class OrderObject:
     order_statuses = {
         -1: "DELETED",
-        0: "ALL GOOD",
+        0: "UP TO STANDARD",
         1: "IN PROCESS",
         2: "NEEDS REPLACEMENT"
     }
@@ -22,7 +22,7 @@ class OrderObject:
         self.placed = None
         self.lastchanged = None
         self.customerid = None
-        self.location = None
+        self.locationid = None
         self.status = None        
 
     def __init__(self, data = None): 
@@ -34,5 +34,5 @@ class OrderObject:
             self.placed = data["orderplaced"]
             self.lastchanged = data["orderlastchanged"]
             self.customerid = data["customerid"]
-            self.location = data["orderlocation"]
+            self.locationid = data["locationid"]
             self.status = data["orderstatus"]
