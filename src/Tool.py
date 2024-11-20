@@ -18,7 +18,7 @@ def main():
 
     database = Data(path + "\\" + config["database"])
     
-    reminder = Reminder(database, log_file)
+    reminder = Reminder(database, None)
     reminders = reminder.updateReminders()
 
     emailclient = Emailer(email = config["sender"], key = config["api"])

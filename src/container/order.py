@@ -13,7 +13,8 @@ class OrderObject:
         -1: "DELETED",
         0: "UP TO STANDARD",
         1: "IN PROCESS",
-        2: "NEEDS REPLACEMENT"
+        2: "REPLACEMENT SOON",
+        3: "NEEDS REPLACEMENT"
     }
 
     def setup_none(self):
@@ -33,6 +34,7 @@ class OrderObject:
             self.formattedid = "{:04d}".format(self.id)
             self.placed = data["orderplaced"]
             self.lastchanged = data["orderlastchanged"]
+            self.originalinstall = data["orderoriginalinstall"]
             self.customerid = data["customerid"]
             self.locationid = data["locationid"]
             self.status = data["orderstatus"]

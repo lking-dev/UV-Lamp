@@ -28,7 +28,8 @@ class Reminder:
     # -1: DELETED
     #  0: ALL GOOD
     #  1: IN PROCESS
-    #  2: NEEDS REPLACEMENT
+    #  2: DUE SOON
+    #  3: NEEDS REPLACEMENT
 
     def updateReminders(self):
         # fetch the order data
@@ -51,9 +52,14 @@ class Reminder:
 
         for order in relevant:
             reminder = self.database.searchRemindersForOrder(order.id)
-            due = self.testReminder(order, reminder)
+            due = self.testReminder(reminder)
             if due:
+                order.status = 3
+
+            soon = self.testSoonReminder(reminder)
+            if soon:
                 order.status = 2
+
 
             self.database.updateOrder(order)
 
@@ -61,7 +67,7 @@ class Reminder:
 
 
     # determines the rout of action to be taken on a reminder
-    def testReminder(self, order, reminder):
+    def testReminder(self, reminder):
         # grab the current date for comparison
         present = datetime.now()
         # get a datetime object from the string stored in the reminder
@@ -73,6 +79,20 @@ class Reminder:
         # otherwise no action
         else:
             return False
+    
+    # determines if maintence is due within 3 months time
+    def testSoonReminder(self, reminder):
+        # grab the current date for comparison
+        present = datetime.now()
+        # get a datetime object from the string stored in the reminder
+        due = datetime.strptime(reminder.date, "%m/%d/%Y")
+
+        days = (present - due).days
+
+        if days <= 90:
+            return True
+        else:
+            return False 
 
     # schedules a reminder for an order
     def scheduleReminder(self, order):

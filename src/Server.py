@@ -4,6 +4,7 @@ from datetime import datetime
 from container import order
 from container.order import OrderObject
 from container.history import HistoryEvent
+from container.location import LocationObject
 import os
 
 app = Flask(__name__)
@@ -88,8 +89,8 @@ def user_orders():
 
 @app.get("/pages/orders/<orderid>")
 def more_info_page(orderid):
-    if "userid" not in session:
-        return "You are not logged in! <br><a href = '/pages/login'>" + "click here to log in</a>"
+    #if "userid" not in session:
+        #return "You are not logged in! <br><a href = '/pages/login'>" + "click here to log in</a>"
 
     database = Data(database_path)
     
@@ -97,8 +98,29 @@ def more_info_page(orderid):
     customer = database.searchCustomerByID(order.customerid)
     history = database.searchHistoryForOrder(orderid)
     location = database.searchLocationByID(order.locationid)
+    reminder = database.searchRemindersForOrder(order.id)
 
-    return render_template("web/info_template.html", order=order, customer=customer, history=history, location=location)
+    generatedmapslink = construct_maps_url(location)
+
+    due = datetime.strptime(reminder.date, "%m/%d/%Y")
+    now = datetime.now()
+    diff = (due - now).days
+
+    daysuntildue = None
+
+    if diff <= 0:
+        daysuntildue = "Past Due"
+    else:
+        daysuntildue = str(diff) + " Days"
+
+    return render_template("web/info_template.html",
+        order = order,
+        customer = customer,
+        history = history,
+        location = location,
+        reminder = reminder,
+        generatedmapslink = generatedmapslink,
+        daysuntildue = daysuntildue)
 
 @app.get("/pages/register_order")
 def register_order():
@@ -238,9 +260,34 @@ def rearrange_orders(orders):
     inactive = [o for o in orders if o.status == 2]
     return active + inactive
 
+# returns a google maps url for a location object
+def construct_maps_url(location: LocationObject):
+    template = "https://www.google.com/maps/search/?api=1&query={}"
+
+    tmp = location.address
+    if tmp[len(tmp) - 1] == ".":
+        tmp = tmp[:-1]
+    location.address = tmp
+
+    strings = [location.address, location.city, location.state, str(location.zipcode)]
+    builder = ""
+
+    for i, string in enumerate(strings):
+        components = string.split()
+        for j, component in enumerate(components):
+            builder += component
+            if (j == len(components) - 1) and (i != len(strings) - 1):
+                builder += ","
+            if (j != len(components) - 1) and (i != len(strings) - 1):
+                builder += "+"
+
+    request = template.format(builder)
+
+    return request
+
 # main method that sets up and runs the server
 def main():
-    app.run(host = "10.10.10.146", port=80)
+    app.run(host = "10.10.101.226", port=80)
 
 if __name__ == "__main__":
     main()

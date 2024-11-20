@@ -2,7 +2,6 @@
 <html>
     <head>
         <link rel = "stylesheet" href = "/static/stylesheets/info.css"/>
-        <link rel = "stylesheet" href = "info.css"/>
         <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body style = "width: 100vw; height: 100vh;">
@@ -13,32 +12,45 @@
             <div id = "main-div">
                 <div id = "top-div">
                     <label id = "order-id-label">
-                        Order ID: #102312
+                        Order ID: #{{ order.formattedid }}
                     </label>
                     <label id = "order-date-placed-label">
                         Tues, November 11th, 2024
                     </label>
                     <div id = "order-status-div">
-                        <label class = "order-status-label status-color-green">
-                             Active
-                        </label>
-                        <label class = "order-status-label status-color-red">Needs Maintence</label>
-                        <label class = "order-status-label status-color-grey">In Process</label>
-                        <label class = "order-status-label status-color-yellow">Maintence Soon</label>
+                        {% if order.status == -1 %}
+                            <label class = "order-status-label status-color-green">Active</label>
+                        {% else %}
+                            <label class = "order-status-label status-color-red">Deleted</label>
+                        {% endif %}
+
+                        {% if order.status == 0 %}
+                            <label class = "order-status-label status-color-green">Up To Date</label>
+                        {% elif order.status == 1 %}
+                            <label class = "order-status-label status-color-grey">In Process</label>
+                        {% elif order.status == 2 %}
+                            <label class = "order-status-label status-color-yellow">Maintence Soon</label>
+                        {% elif order.status == 3 %}
+                            <label class = "order-status-label status-color-red">Needs Maintence</label>
+                        {% endif %}
                     </div>
                 </div>
                 <div id = "lower-div">
                     <div class = "info-table-wrapper">
                         <label class = "info-table-header">
-                            Customer
+                            Contractor
                         </label>
                         <div class = "info-table-row">
-                            <label class = "info-table-key">Customer Name:</label>
-                            <label class = "info-table-value">Landry M. King</label>
+                            <label class = "info-table-key">Contractor Name:</label>
+                            <label class = "info-table-value">{{ customer.fullname }}</label>
                         </div>
                         <div class = "info-table-row">
-                            <label class = "info-table-key">Customer Email:</label>
-                            <label class = "info-table-value">lanmanking@yahoo.com</label>
+                            <label class = "info-table-key">Contractor Email:</label>   
+                            <label class = "info-table-value">{{ customer.email }}</label>
+                        </div>
+                        <div class = "info-table-row">
+                            <label class = "info-table-key">Contractor Company:</label>   
+                            <label class = "info-table-value">{{ customer.company }}</label>
                         </div>
                     </div>
                     <div class = "info-table-wrapper">
@@ -47,22 +59,26 @@
                         </label>
                         <div class = "info-table-row">
                             <label class = "info-table-key">Order Placed:</label>
-                            <label class = "info-table-value">11/13/2024</label>
+                            <label class = "info-table-value">{{ order.placed }}</label>
                         </div>
                         <div class = "info-table-row">
                             <label class = "info-table-key">Original Install:</label>
-                            <label class = "info-table-value">11/13/2024</label>
+                            <label class = "info-table-value">{{ order.originalinstall }}</label>
                         </div>
                         <div class = "info-table-row">
                             <label class = "info-table-key">Most Recent Install:</label>
-                            <label class = "info-table-value">11/18/2027</label>
+                            <label class = "info-table-value">{{ order.lastchanged }}</label>
                         </div>
                         <div class = "info-table-row">
                             <label class = "info-table-key">Next Install:</label>
-                            <label class = "info-table-value">11/18/2030</label>
+                            <label class = "info-table-value">{{ reminder.date }}</label>
                         </div>
                         <div class = "info-table-row">
-                            <a class = "info-table-link" href = "update.html">Update Replacement Status</a>
+                            <label class = "info-table-key">Days Until Next Install:</label>
+                            <label class = "info-table-value">{{ daysuntildue }}</label>
+                        </div>
+                        <div class = "info-table-row">
+                            <a class = "info-table-link" href = "update.html">Update Maintence Status</a>
                         </div>
                     </div>
                     <div class = "info-table-wrapper">
@@ -71,45 +87,30 @@
                         </label>
                         <div class = "info-table-row">
                             <label class = "info-table-key">Address:</label>
-                            <label class = "info-table-value">9538 Kingston Crossing Cir.</label>
+                            <label class = "info-table-value">{{ location.address }}</label>
                         </div>
                         <div class = "info-table-row">
                             <label class = "info-table-key">City/State:</label>
-                            <label class = "info-table-value">Johns Creek, GA</label>
+                            <label class = "info-table-value">{{ location.city }}, {{ location.state }}</label>
                         </div>
                         <div class = "info-table-row">
                             <label class = "info-table-key">Zipcode:</label>
-                            <label class = "info-table-value">30022</label>
+                            <label class = "info-table-value">{{ location.zipcode }}</label>
+                        </div>
+                        <div class = "info-table-row">
+                            <a class = "info-table-link" href = "{{ generatedmapslink }}">Go To Address</a>
                         </div>
                     </div>
                     <div class = "info-table-wrapper">
                         <label class = "info-table-header">
                             History
                         </label>
+                        {% for event in history: %}
                         <div class = "info-table-row">
-                            <label class = "info-table-key">Order Created</label>
-                            <label class = "info-table-value">11/13/2024</label>
+                            <label class = "info-table-key">{{ event.content }}</label>
+                            <label class = "info-table-value">{{ event.date }}</label>
                         </div>
-                        <div class = "info-table-row">
-                            <label class = "info-table-key">Reminder scheduled 11/13/2027</label>
-                            <label class = "info-table-value">11/13/2024</label>
-                        </div>
-                        <div class = "info-table-row">
-                            <label class = "info-table-key">Status set to "Needs Maintence"</label>
-                            <label class = "info-table-value">11/13/2027</label>
-                        </div>
-                        <div class = "info-table-row">
-                            <label class = "info-table-key">Maintence reminder email sent</label>
-                            <label class = "info-table-value">11/13/2027</label>
-                        </div>
-                        <div class = "info-table-row">
-                            <label class = "info-table-key">Status set to "All Good"</label>
-                            <label class = "info-table-value">11/18/2027</label>
-                        </div>
-                        <div class = "info-table-row">
-                            <label class = "info-table-key">Reminder scheduled 11/18/2030</label>
-                            <label class = "info-table-value">11/18/2027</label>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
