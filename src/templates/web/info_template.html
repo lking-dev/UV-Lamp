@@ -15,10 +15,10 @@
                         Order ID: #{{ order.formattedid }}
                     </label>
                     <label id = "order-date-placed-label">
-                        Tues, November 11th, 2024
+                        Next Replacement: {{ reminder.formatteddate }}
                     </label>
                     <div id = "order-status-div">
-                        {% if order.status == -1 %}
+                        {% if order.status != -1 %}
                             <label class = "order-status-label status-color-green">Active</label>
                         {% else %}
                             <label class = "order-status-label status-color-red">Deleted</label>
@@ -58,7 +58,7 @@
                             Order
                         </label>
                         <div class = "info-table-row">
-                            <label class = "info-table-key">Order Placed:</label>
+                            <label class = "info-table-key">Order Registered:</label>
                             <label class = "info-table-value">{{ order.placed }}</label>
                         </div>
                         <div class = "info-table-row">
@@ -79,6 +79,23 @@
                         </div>
                         <div class = "info-table-row">
                             <a class = "info-table-link" href = "update.html">Update Maintence Status</a>
+                        </div>
+                    </div>
+                    <div class = "info-table-wrapper">
+                        <label class = "info-table-header">
+                            Product
+                        </label>
+                        <div class = "info-table-row">
+                            <label class = "info-table-key">Product Name:</label>
+                            <label class = "info-table-value">{{ product["name"] }}</label>
+                        </div>
+                        <div class = "info-table-row">
+                            <label class = "info-table-key">Product SKU:</label>
+                            <label class = "info-table-value">{{ product["sku_uppercase"] }}</label>
+                        </div>
+                        <div class = "info-table-row">
+                            <label class = "info-table-key">Product Warranty:</label>
+                            <label class = "info-table-value">{{ productwarranty }}</label>
                         </div>
                     </div>
                     <div class = "info-table-wrapper">

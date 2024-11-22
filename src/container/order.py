@@ -38,3 +38,4 @@ class OrderObject:
             self.customerid = data["customerid"]
             self.locationid = data["locationid"]
             self.status = data["orderstatus"]
+            self.sku = data["ordersku"]

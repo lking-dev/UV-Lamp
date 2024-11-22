@@ -5,6 +5,7 @@ from container import order
 from container.order import OrderObject
 from container.history import HistoryEvent
 from container.location import LocationObject
+from PGData import PGData
 import os
 
 app = Flask(__name__)
@@ -99,6 +100,11 @@ def more_info_page(orderid):
     history = database.searchHistoryForOrder(orderid)
     location = database.searchLocationByID(order.locationid)
     reminder = database.searchRemindersForOrder(order.id)
+    
+    orodb = PGData()
+    product = orodb.getProductData(order.sku)
+    productwarranty = product["sku"][5] + " Year"
+    if int(product["sku"][5]) > 1: productwarranty += "s"
 
     generatedmapslink = construct_maps_url(location)
 
@@ -120,7 +126,9 @@ def more_info_page(orderid):
         location = location,
         reminder = reminder,
         generatedmapslink = generatedmapslink,
-        daysuntildue = daysuntildue)
+        daysuntildue = daysuntildue,
+        product = product,
+        productwarranty = productwarranty)
 
 @app.get("/pages/register_order")
 def register_order():
