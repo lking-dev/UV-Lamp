@@ -15,7 +15,7 @@ body {
     top: 150px;
 
     width: 100%;
-    height: 90%;
+    height: calc(100% - 150px);
     padding: 0;
     margin: 0;
 }
@@ -32,7 +32,7 @@ body {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 16px;
     width: 90%;
-    height: 90%;
+    height: 92.5%;
     margin-left: auto;
     margin-right: auto;
 
@@ -57,7 +57,7 @@ body {
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
     width: 100%;
-    height: calc(100% - 200px);
+    height: 100%;
 
     overflow-y: scroll;
 }
@@ -160,4 +160,11 @@ body {
     float: left;
     text-decoration: none;
     margin-top: 8px;
+    width: 100%;
+
+    color: blue;
+}
+
+.info-table-link:visited {
+    color: blue;
 }

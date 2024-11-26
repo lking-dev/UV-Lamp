@@ -1,12 +1,18 @@
 # generic order object for holding data in named fields instead of a set
 
-# ORDERS SCHEMA:
-# orderid INTEGER PRIMARY KEY AUTOINCREMENT
-# orderplaced TEXT
-# orderlastchanged TEXT
-# orderlocation TEXT
-# orderstatus INT
-# customerid INTEGER (FOREIGN KEY)
+# .schema as of 11/26/2024
+# CREATE TABLE Orders (
+#   orderid INTEGER PRIMARY KEY AUTOINCREMENT,
+#   orderplaced TEXT,
+#   orderlastchanged TEXT,
+#   customerid INTEGER,
+#   orderstatus INTEGER,
+#   locationid INTEGER,
+#   orderoriginalinstall TEXT, 
+#   ordersku TEXT, 
+#   FOREIGN KEY(customerid) REFERENCES Customers(customerid), 
+#   FOREIGN KEY(locationid) REFERENCES Locations(locationid)
+# );
 
 class OrderObject:
     order_statuses = {
@@ -17,25 +23,14 @@ class OrderObject:
         3: "NEEDS REPLACEMENT"
     }
 
-    def setup_none(self):
-        self.id = None
-        self.formattedid = None
-        self.placed = None
-        self.lastchanged = None
-        self.customerid = None
-        self.locationid = None
-        self.status = None        
-
     def __init__(self, data = None): 
-        if data == None:
-            self.setup_none()
-        else:       
-            self.id = data["orderid"]
-            self.formattedid = "{:04d}".format(self.id)
-            self.placed = data["orderplaced"]
-            self.lastchanged = data["orderlastchanged"]
-            self.originalinstall = data["orderoriginalinstall"]
-            self.customerid = data["customerid"]
-            self.locationid = data["locationid"]
-            self.status = data["orderstatus"]
-            self.sku = data["ordersku"]
+        self.id = data["orderid"]
+        self.placed = data["orderplaced"]
+        self.lastchanged = data["orderlastchanged"]
+        self.originalinstall = data["orderoriginalinstall"]
+        self.customerid = data["customerid"]
+        self.locationid = data["locationid"]
+        self.status = data["orderstatus"]
+        self.sku = data["ordersku"]
+
+        self.formattedid = "{:04d}".format(self.id)

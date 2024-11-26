@@ -77,9 +77,6 @@
                             <label class = "info-table-key">Days Until Next Install:</label>
                             <label class = "info-table-value">{{ daysuntildue }}</label>
                         </div>
-                        <div class = "info-table-row">
-                            <a class = "info-table-link" href = "update.html">Update Maintence Status</a>
-                        </div>
                     </div>
                     <div class = "info-table-wrapper">
                         <label class = "info-table-header">
@@ -96,6 +93,9 @@
                         <div class = "info-table-row">
                             <label class = "info-table-key">Product Warranty:</label>
                             <label class = "info-table-value">{{ productwarranty }}</label>
+                        </div>
+                        <div class = "info-table-row">
+                            <a class = "info-table-link" href = "/IMPLEMENT-LOL">View Product Info</a>
                         </div>
                     </div>
                     <div class = "info-table-wrapper">
@@ -115,6 +115,10 @@
                             <label class = "info-table-value">{{ location.zipcode }}</label>
                         </div>
                         <div class = "info-table-row">
+                            <label class = "info-table-key">Phone #:</label>
+                            <label class = "info-table-value">{{ location.homephone }}</label>
+                        </div>
+                        <div class = "info-table-row">
                             <a class = "info-table-link" href = "{{ generatedmapslink }}">Go To Address</a>
                         </div>
                     </div>
@@ -128,6 +132,15 @@
                             <label class = "info-table-value">{{ event.date }}</label>
                         </div>
                         {% endfor %}
+                    </div>
+                    <div class = "info-table-wrapper">
+                        <label class = "info-table-header">
+                            Actions
+                        </label>
+                        <div class = "info-table-row">
+                            <a class = "info-table-link" href = "">Register Maintence Update</a>
+                            <a class = "info-table-link" href = "">Remove Order</a>
+                        </div>
                     </div>
                 </div>
             </div>

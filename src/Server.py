@@ -6,6 +6,7 @@ from container.order import OrderObject
 from container.history import HistoryEvent
 from container.location import LocationObject
 from PGData import PGData
+import GoogleMapsAPI
 import os
 
 app = Flask(__name__)
@@ -45,10 +46,14 @@ def index():
     # DELETE ABOVE LINE! FOR TESTING ONLY
     return redirect("/pages/login")
 
+
+
 # the actual login page, for GET requests 
 @app.get("/pages/login") 
 def login_page():
     return render_template("web/login.html", failed = False)
+
+
 
 # login page logic using POST form
 # either sends user to their orders or redirects to the login page with an error message
@@ -63,6 +68,8 @@ def login():
 
         return redirect("/pages/orders")
     
+
+
 # logout page, just clears the session then re-routs to login page
 @app.get("/pages/logout")
 def logout():
@@ -71,54 +78,74 @@ def logout():
     else:
         session.clear()
         return redirect("/pages/login")
-    
+
+
+
 @app.get("/pages/signup")
 def signup():
     return "this page isnt implemented yet LOL"
 
+
+
 # user orders page, the heart of the website, displays all the orders that the user has 
 @app.get("/pages/orders")
 def user_orders():
-    if "userid" not in session:
-        return "You are not logged in! <br><a href = '/pages/login'>" + "click here to log in</a>"
-
     database = Data(database_path)
-    orders = database.searchOrdersForCustomer(session["userid"])
-    orders = rearrange_orders(orders)
-    
-    return render_template("web/orders.html", orders = orders, username = "username")
 
+    orders = database.searchOrdersForCustomer(1) # HARDCODED FOR DEBUG
+    reminders = [database.searchRemindersForOrder(order.id) for order in orders]
+    locations = [database.searchLocationByID(order.locationid) for order in orders]
+    # LATITUDE AND LONGITUDE HAVE TO BE SWITCHED FOR THE API CALL
+    # IDK WHAT I DID BUT IT MUST BE SWITCHED TO WORK
+    streetviewlinks = [GoogleMapsAPI.constructStreetviewRequest((location.longitude, location.latitude), (480, 640), 60) for location in locations]
+    locationlinks = [GoogleMapsAPI.constructMapsURL(location) for location in locations]
+    
+    return render_template("web/orders_template.html",
+        orders = orders,
+        reminders = reminders,
+        locations = locations,
+        streetviewlinks = streetviewlinks,
+        locationlinks = locationlinks)
+
+
+
+# the heart of this app. anything important you want to know is here
 @app.get("/pages/orders/<orderid>")
 def more_info_page(orderid):
+    # REMOVED FOR DEBUG
     #if "userid" not in session:
         #return "You are not logged in! <br><a href = '/pages/login'>" + "click here to log in</a>"
 
+    # get the local sqlite3 connection
     database = Data(database_path)
+    # get the external connection to ORO UAT5
+    orodb = PGData()
     
+    # grab all relevant data to be shipped to template
     order = database.searchOrderByID(orderid)
     customer = database.searchCustomerByID(order.customerid)
     history = database.searchHistoryForOrder(orderid)
     location = database.searchLocationByID(order.locationid)
     reminder = database.searchRemindersForOrder(order.id)
-    
-    orodb = PGData()
     product = orodb.getProductData(order.sku)
+
+    # the SKU's of the items stored here follow the following format:
+    # TUVL-<year: 1 digit><size (inch): 2 digits)><pig-tail (OPTIONAL): 1 character ('P')>"
+    # so the SKU's warranty can be extracted from the 6th character of the SKU (index 5)
     productwarranty = product["sku"][5] + " Year"
+    # if the warranty is greater than a year change the text to "Years" instead of "Year"
     if int(product["sku"][5]) > 1: productwarranty += "s"
 
-    generatedmapslink = construct_maps_url(location)
+    # grab the maps url for a given address
+    generatedmapslink = GoogleMapsAPI.constructMapsURL(location)
 
-    due = datetime.strptime(reminder.date, "%m/%d/%Y")
-    now = datetime.now()
-    diff = (due - now).days
-
+    # calculate the days until a given order is due
+    diff = (datetime.strptime(reminder.date, "%m/%d/%Y") - datetime.now()).days
     daysuntildue = None
+    if diff <= 0: daysuntildue = "Past Due"
+    else: daysuntildue = str(diff) + " Days"
 
-    if diff <= 0:
-        daysuntildue = "Past Due"
-    else:
-        daysuntildue = str(diff) + " Days"
-
+    # return the template formatted with the given information
     return render_template("web/info_template.html",
         order = order,
         customer = customer,
@@ -130,9 +157,13 @@ def more_info_page(orderid):
         product = product,
         productwarranty = productwarranty)
 
+
+
 @app.get("/pages/register_order")
 def register_order():
     return render_template("web/register.html")
+
+
 
 # updates an orders status using POST and url arguments
 @app.get("/pages/update_order/<orderid>")
@@ -142,9 +173,13 @@ def update_order_page(orderid):
 
     return render_template("web/update.html", order = order)
 
+
+
 ##################
 ### ORDERS API ###
 ##################
+
+
 
 @app.post("/api/order/<orderid>/update")
 def update_order(orderid):
@@ -267,31 +302,6 @@ def rearrange_orders(orders):
     active = [o for o in orders if o.status != 2]
     inactive = [o for o in orders if o.status == 2]
     return active + inactive
-
-# returns a google maps url for a location object
-def construct_maps_url(location: LocationObject):
-    template = "https://www.google.com/maps/search/?api=1&query={}"
-
-    tmp = location.address
-    if tmp[len(tmp) - 1] == ".":
-        tmp = tmp[:-1]
-    location.address = tmp
-
-    strings = [location.address, location.city, location.state, str(location.zipcode)]
-    builder = ""
-
-    for i, string in enumerate(strings):
-        components = string.split()
-        for j, component in enumerate(components):
-            builder += component
-            if (j == len(components) - 1) and (i != len(strings) - 1):
-                builder += ","
-            if (j != len(components) - 1) and (i != len(strings) - 1):
-                builder += "+"
-
-    request = template.format(builder)
-
-    return request
 
 # main method that sets up and runs the server
 def main():

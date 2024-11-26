@@ -1,0 +1,70 @@
+<!-- <img class = "location-thumbnail" src = "https://maps.googleapis.com/maps/api/streetview?location=34.0130641,-84.2075124&size=600x480&fov=60&key=AIzaSyBQi69vJT0EvL2A2mX8aiKPCoHhELcQQvc"/>
+                                <a class = "location-link" href = "https://www.google.com/maps/search/?api=1&query=9538+Kingston+Crossing+Circle,+Johns+Creek,+GA">Go to maps</a> -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel = "stylesheet" href = "/static/stylesheets/orders.css"/>
+        <!--<link rel = "stylesheet" href = "orders.css"/>-->
+        <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body style = "width: 100vw; height: 100vh;">
+        <label id = "head-label">
+            Your Orders
+        </label>
+        <div id = "main-div">
+            <table id = "orders-table" class = "debug">
+                <tbody>
+                    {% for order in orders %}
+                        <tr class = "table-row">
+                            <td class = "table-item">
+                                <div class = "item-div-left">
+                                    <img class = "item-thumbnail" src = "{{ streetviewlinks[loop.index0] }}"/>
+                                    <div class = "location-button-div">
+                                        <a class = "location-button" href = "{{ locationlinks[loop.index0] }}">
+                                            <i class = "fa fa-location-arrow visit-maps-button" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class = "item-div-right">
+                                    <div class = "item-div-top-right">
+                                        <label class = "item-id-label">Order #{{ order.formattedid }}</label>
+                                        {% if order.status != -1 %}
+                                            <label class = "order-status-label status-color-green">Active</label>
+                                            {% if order.status == 0 %}
+                                                <label class = "order-status-label status-color-green">All Good</label>
+                                            {% elif order.status == 1 %}
+                                                <label class = "order-status-label status-color-gray">In Process</label>
+                                            {% elif order.status == 2 %}
+                                                <label class = "order-status-label status-color-yellow">Replacement Soon</label>
+                                            {% elif order.status == 3 %}
+                                                <label class = "order-status-label status-color-red">Replacement Needed</label>
+                                            {% endif %}
+                                        {% else %}
+                                            <label class = "order-status-label status-color-red">Deleted</label>
+                                        {% endif %}
+                                    </div>
+                                    <div class = "item-div-bottom-right">
+                                        <label class = "item-description-label">Address: <span style = "color: black;">{{ locations[loop.index0].fulladdress }}</span></label>
+                                        <label class = "item-description-label">Next Change: <span style = "color: black;">{{ reminders[loop.index0].date }}</span></label>
+                                        <label class = "item-description-label">Installed Product: <span style = "color: black;">{{ order.sku }}</span></label>
+                                    </div>
+                                    <div class = "info-button-div">
+                                        <a class = "info-button" href = "/pages/orders/{{ order.id }}">
+                                            <i class = "fa fa-info" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class = "nav-bar">
+            <a href = ""><i class = "fa fa-plus" aria-hidden="true"></i></a>
+            <a href = ""><i class = "fa fa-user" aria-hidden="true"></i></a>
+            <a href = ""><i class = "fa fa-sign-in" aria-hidden="true"></i></a>
+        </div>
+    </body>
+</html>

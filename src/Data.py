@@ -193,6 +193,8 @@ class Data:
         ))
 
         self.connector.commit()
+
+        ### UPDATE UDPATE ORDER~!~!!!!!!!!!!!!!!!
     
     # replaces data for an order record
     def updateOrder(self, order):
