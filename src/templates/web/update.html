@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel = "stylesheet" href = "/static/stylesheets/update.css"/>
+        <link rel = "stylesheet" href = "/static/stylesheets/info.css"/>
+        <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
-    <body>
-        <div id = "main-div" class = "debug">
-            <form action = "/api/order/{{ order.id }}/update" method = "POST">
-                <label id = "top-label"><b>Update Order {{ order.id }}</b></label>
-                <input type = "text" id = "order-date-input" placeholder = "Order Placement Date" name = "form-placed" class = "textbox" value = "{{ order.placed }}" required>
-                <input type = "text" id = "last-date-input" placeholder = "Order Last Changed" name = "form-last" class = "textbox" value = "{{ order.lastchanged }}" required>
-                <input type = "text" id = "address-input" placeholder = "Address" name = "form-location" class = "textbox" value = "{{ order.location }}" required>
-                <button type = "submit" id = submit-button>Update Information</button>
-            </form>
+    <body style = "width: 100vw; height: 100vh;">
+        <label id = "head-label">
+            Update Order Information
+        </label>
+        <div id = "wrapper-div">
+            <div id = "main-div">
+
+            </div>
         </div>
     </body>
 </html>

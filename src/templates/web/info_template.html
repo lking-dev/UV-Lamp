@@ -83,19 +83,19 @@
                             Product
                         </label>
                         <div class = "info-table-row">
-                            <label class = "info-table-key">Product Name:</label>
+                            <label class = "info-table-key">Item Name:</label>
                             <label class = "info-table-value">{{ product["name"] }}</label>
                         </div>
                         <div class = "info-table-row">
-                            <label class = "info-table-key">Product SKU:</label>
+                            <label class = "info-table-key">Item#:</label>
                             <label class = "info-table-value">{{ product["sku_uppercase"] }}</label>
                         </div>
                         <div class = "info-table-row">
-                            <label class = "info-table-key">Product Warranty:</label>
+                            <label class = "info-table-key">Item Warranty:</label>
                             <label class = "info-table-value">{{ productwarranty }}</label>
                         </div>
                         <div class = "info-table-row">
-                            <a class = "info-table-link" href = "/IMPLEMENT-LOL">View Product Info</a>
+                            <a class = "info-table-link" href = "/pages/items/view/{{ product_sku }}">View Product Information</a>
                         </div>
                     </div>
                     <div class = "info-table-wrapper">

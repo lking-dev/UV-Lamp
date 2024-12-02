@@ -3,99 +3,42 @@
     font-family: "Roboto", sans-serif;
 }
 
+body {
+    margin: 0;
+    padding: 0;
+
+    background-color: rgb(255, 255, 255);
+}
+
+#wrapper-div {
+    position: absolute;
+    top: 150px;
+
+    width: 100%;
+    height: calc(100% - 150px);
+    padding: 0;
+    margin: 0;
+}
+
+#head-label {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+
+    font-size: 58px;
+}
+
 #main-div {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 16px;
+    width: 90%;
+    height: 92.5%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 8%;
-    height: 400px;
-    width: 350px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding-top: 42px;
-    border-radius: 4px;
+
+    box-sizing: border-box;
+    display: block;
+
+    padding: 20px;
     background-color: white;
-    justify-content: center;
-    display: flex;
-}
-
-.debug {
-    /*border: 5px solid green;*/
-}
-
-#top-label {
-    font-size: 30px;
-    color: black;
-    display: flex;
-    justify-content: left;
-    text-align: left;
-}
-
-#sub-label {
-    font-size: 14px;
-    color: black;
-    display: flex;
-    justify-content: left;
-    text-align: left;
-    margin-top: 4px;
-}
-
-#fail-label {
-    font-size: 14;
-    color: rgb(253, 33, 63);
-    display: flex;
-    justify-content: center;
-    margin-bottom: -20px;
-    vertical-align: top;
-}
-
-.textbox {
-    font-size: 24px;
-    height: 45px;
-    border: 0;
-    color: #404040;
-    border-bottom: 1px solid #404040;
-    background: none;
-    display: block;
-    margin: 0 auto;
-    margin-top: 20px;
-    transition: all 0.2s ease;
-}
-
-.textbox:focus {
-    border: none;
-    outline: none;
-    color: black;
-    border-bottom: 1px solid black;
-}
-
-#submit-button {
-    display: block;
-    margin: 0 auto;
-    height: 56px;
-    margin-top: 32px;
-    cursor: pointer;
-    border: none;
-    width: 277px;
-    font-size: 24px;
-    border-radius: 4px;
-    transition-duration: .25s;
-    background-color: #08605F;
-    border-radius: 4px;
-    color: white;
-    border-bottom: 2px solid rgba(0,0,0,0.1);
-}
-
-#fname-input {
-    margin-top: 28px;
-}
-
-#submit-button:hover {
-    background-color: #0d9492;
-}
-
-body {
-
-}
-
-html {
-    height: 100%;
 }

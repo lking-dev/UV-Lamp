@@ -10,16 +10,17 @@ body {
 
 #main-div {
     position: absolute;
-    top: 125px;
+    top: 150px;
     height: calc(100% - 125px);
     background-color: white;
-    padding: 32px;
+    padding-left: 49px;
+    padding-right: 49px;
 }
 
 #head-label {
     position: absolute;
     top: 50px;
-    left: 32px;
+    left: 49px;
 
     font-size: 58px;
 }

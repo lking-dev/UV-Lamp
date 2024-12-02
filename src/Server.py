@@ -42,8 +42,6 @@ columns_reminders = {
 # the home page, redirects any default requests to the login page
 @app.route("/")
 def index():
-    return render_template("web/info.html")
-    # DELETE ABOVE LINE! FOR TESTING ONLY
     return redirect("/pages/login")
 
 
@@ -59,7 +57,7 @@ def login_page():
 # either sends user to their orders or redirects to the login page with an error message
 @app.post("/pages/login")
 def login():
-    userid = try_login(request.form["form-email"], request.form["form-pword"])
+    userid = try_login(request.form["form-email"], request.form["form-password"])
 
     if not userid:
         return render_template("web/login.html", failed = True)
@@ -108,6 +106,15 @@ def user_orders():
         locationlinks = locationlinks)
 
 
+@app.get("/pages/items/view/<sku>")
+def view_item(sku):
+    return redirect(f"https://www.diversitech.com/product/search?keyword={sku}")
+
+
+@app.get("/pages/items/view")
+def view_items():
+    return redirect("https://www.diversitech.com/product-families/indoor-air-quality/residential-indoor-air-quality/replacement-uv-lamps")
+
 
 # the heart of this app. anything important you want to know is here
 @app.get("/pages/orders/<orderid>")
@@ -133,6 +140,7 @@ def more_info_page(orderid):
     # TUVL-<year: 1 digit><size (inch): 2 digits)><pig-tail (OPTIONAL): 1 character ('P')>"
     # so the SKU's warranty can be extracted from the 6th character of the SKU (index 5)
     productwarranty = product["sku"][5] + " Year"
+    product_sku = product["sku"]
     # if the warranty is greater than a year change the text to "Years" instead of "Year"
     if int(product["sku"][5]) > 1: productwarranty += "s"
 
@@ -155,11 +163,12 @@ def more_info_page(orderid):
         generatedmapslink = generatedmapslink,
         daysuntildue = daysuntildue,
         product = product,
-        productwarranty = productwarranty)
+        productwarranty = productwarranty,
+        product_sku = product_sku)
 
 
 
-@app.get("/pages/register_order")
+@app.get("/pages/register")
 def register_order():
     return render_template("web/register.html")
 
