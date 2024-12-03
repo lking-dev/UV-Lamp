@@ -80,8 +80,24 @@ def logout():
 
 
 @app.get("/pages/signup")
+def signup_page():
+    return render_template("web/signup.html")
+   
+
+
+@app.post("/pages/signup")
 def signup():
-    return "this page isnt implemented yet LOL"
+    print("SIGNUP REQUEST FROM {}".format(request.user_agent))
+    print("\tFirstname: {}\n\tLastname: {}\n\tEmail: {}\n\tCompany: {}".format(
+        request.form["form-firstname"], request.form["form-lastname"], request.form["form-email"], request.form["form-company"]))
+    if (validate_address(request.form["form-address0"], request.form["form-address1"], request.form["form-address2"], request.form["form-address3"])):
+        print("\tAddress Line 1: {}\n\tCity: {}\n\tState: {}\n\tZipcode: {}".format(
+            request.form["form-address0"], request.form["form-address1"], request.form["form-address2"], request.form["form-address3"]))
+    else:
+        print("\tINVALID ADDRESS COMPONENTS, IGNORING")
+    print("\tPassword: {}".format(request.form["form-password"]))
+
+    return render_template("web/signup.html")
 
 
 
@@ -289,6 +305,13 @@ def reminder_table():
 #########################
 ### NON WEB FUNCTIONS ###
 #########################
+
+def validate_address(address, city, state, zipcode):
+    components = [address, city, state, zipcode]
+    for component in components:
+        if component == None or component == "":
+            return False
+    return True
 
 # try login: determines a login requests validity
 def try_login(email, password):
