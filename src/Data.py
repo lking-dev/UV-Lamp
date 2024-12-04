@@ -28,10 +28,6 @@ class Data:
     def forceCommit(self):
         self.connector.commit()
 
-    #########################
-    ###   ADD FUNCTIONS   ###
-    #########################
-
     # creates a new order
     def addOrder(self, order: OrderObject):
         sql = """
@@ -74,21 +70,46 @@ class Data:
         print("INSERT INTO OrderHistory(historydate, historycontent, linkedorderid) VALUES ('{}', '{}', {});".format(date, content, order))
 
         return self.cursor.lastrowid
-
-    ############################
-    ###   DELETE FUNCTIONS   ###
-    ############################
     
+    def addCustomer(self, firstname, lastname, email, company, password):
+        sql = "INSERT INTO Customers(customerfirstname, customerlastname, customeremail, customercompany, customerpassword) VALUES (?, ?, ?, ?, ?);"
+        self.cursor.execute(sql, (firstname, lastname, email, company, password))
+        self.connector.commit()
+
+        return self.cursor.lastrowid
+    
+    def addCustomer(self, firstname, lastname, email, company, password, locationid):
+        sql = "INSERT INTO Customers(customerfirstname, customerlastname, customeremail, customercompany, customerpassword, customerlocationid) VALUES (?, ?, ?, ?, ?, ?);"
+        self.cursor.execute(sql, (firstname, lastname, email, company, password, locationid))
+        self.connector.commit()
+
+        return self.cursor.lastrowid
+    
+    def addLocation(self, address, zipcode, city, state, longitude, latitude, homephone):
+        sql = """INSERT INTO Locations
+            locationaddress,
+            locationlogitude,
+            locationlatitude,
+            locationzipcode,
+            locationcity,
+            locationstate,
+            locationhomephone
+        ) VALUES (?, ?, ?, ?, ?, ?);"""
+
+        self.cursor.execute(sql, (address, longitude, latitude, zipcode, city, state, homephone))
+        self.connector.commit()
+
+        return self.cursor.lastrowid
+    
+    # adds a location without a home phone number
+    def addLocation(self, address, zipcode, city, state, longitude, latitude):
+        return self.addLocation(address, zipcode, city, state, longitude, latitude, "NO_NUMBER_GIVEN")
 
     # removes a reminder
     def delReminder(self, reminder):
         sql = "DELETE FROM Reminders WHERE reminderid = ?;"
         self.cursor.execute(sql, [(reminder.id)])
         self.forceCommit()
-
-    #############################
-    ###   GET ALL FUNCTIONS   ###
-    #############################
 
     # grabs all customer data
     def getAllCustomers(self):
@@ -107,10 +128,6 @@ class Data:
         sql = "SELECT * FROM Reminders;"
         self.cursor.execute(sql)
         return [ReminderObject(o) for o in self.cursor.fetchall() if o != None]
-
-    ############################
-    ###   SEARCH FUNCTIONS   ###
-    ############################
 
     # find customer by id
     def searchCustomerByID(self, id):
@@ -166,10 +183,21 @@ class Data:
         if not result:
             return None
         return LocationObject(result)
+    
+    def searchLocationByCoordinates(self, lat, long):
+        sql = """SELECT * FROM Locations WHERE locationlatitude = ? AND locationlongitude = ?;"""
 
-    ############################
-    ###   UPDATE FUNCTIONS   ###
-    ############################
+        # IMPORTANT!!!
+        # notice how its (long, lat) instead of the normal (lat, long)?
+        # why? because the values are stored in the table in reversed order
+        # i have no clue how that happened. but it needs to be reversed to work
+        self.cursor.execute(sql, (long, lat))
+        
+        result = self.cursor.fetchone()
+
+        if not result:
+            return None
+        return LocationObject(result)
 
     # replaces data for a customer record
     def updateCustomer(self, customer):
@@ -227,10 +255,6 @@ class Data:
 
         self.cursor.execute(sql, (reminder.id))
         self.connector.commit()
-    
-    ###########################################
-    ###   SEARCH BY FOREIGN KEY FUNCTIONS   ###
-    ###########################################
     
     def searchOrdersForCustomer(self, customer: int):
         sql = "SELECT * FROM Orders WHERE customerid = ?;"

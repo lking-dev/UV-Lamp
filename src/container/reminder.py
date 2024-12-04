@@ -1,13 +1,3 @@
-# generic reminder object for holding data in named fields instead of a set
-
-# schema as of 11/26/2024
-# CREATE TABLE Reminders (
-#   reminderid INTEGER PRIMARY KEY AUTOINCREMENT, 
-#   reminderdate TEXT, 
-#   orderid INTEGER, 
-#   FOREIGN KEY (orderid) REFERENCES Orders(orderid)
-# );
-
 from datetime import datetime
 
 class ReminderObject:

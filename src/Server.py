@@ -5,6 +5,7 @@ from container import order
 from container.order import OrderObject
 from container.history import HistoryEvent
 from container.location import LocationObject
+from container.customer import CustomerObject
 from PGData import PGData
 import GoogleMapsAPI
 import os
@@ -84,20 +85,37 @@ def signup_page():
     return render_template("web/signup.html")
    
 
-
+# TODO: ADD ERROR MESSAGES/HANDLING FOR INVALID ADDRESSES
+# USE GOOGLE MAPS ADDRESS VALIDATION API
 @app.post("/pages/signup")
 def signup():
-    print("SIGNUP REQUEST FROM {}".format(request.user_agent))
-    print("\tFirstname: {}\n\tLastname: {}\n\tEmail: {}\n\tCompany: {}".format(
-        request.form["form-firstname"], request.form["form-lastname"], request.form["form-email"], request.form["form-company"]))
-    if (validate_address(request.form["form-address0"], request.form["form-address1"], request.form["form-address2"], request.form["form-address3"])):
-        print("\tAddress Line 1: {}\n\tCity: {}\n\tState: {}\n\tZipcode: {}".format(
-            request.form["form-address0"], request.form["form-address1"], request.form["form-address2"], request.form["form-address3"]))
-    else:
-        print("\tINVALID ADDRESS COMPONENTS, IGNORING")
-    print("\tPassword: {}".format(request.form["form-password"]))
+    database = Data(database_path)
 
-    return render_template("web/signup.html")
+    address_components = [request.form["form-address{}".format(i)] for i in range(4)]
+    final_location = -1
+
+    # entering an address is OPTIONAL for the contractor
+    # this function validates that an actual address was entered
+    # otherwise its assumed they didnt enter one
+    if validate_address(*address_components):
+        latlong = GoogleMapsAPI.geolocateAddress("{}, {}, {} {}".format(*address_components))
+        possible_location = database.searchLocationByCoordinates(*latlong)
+
+        if possible_location is None:
+            locationid = database.addLocation(*address_components, latlong[0], latlong[1])
+            final_location = locationid
+        else:
+            final_location = possible_location.id  
+
+    database.addCustomer(
+        request.form["form-firstname"],
+        request.form["form-lastname"],
+        request.form["form-email"],
+        request.form["form-company"],
+        request.form["form-password"],
+        final_location)      
+    
+    return render_template("web/login.html")
 
 
 
@@ -106,7 +124,7 @@ def signup():
 def user_orders():
     database = Data(database_path)
 
-    orders = database.searchOrdersForCustomer(1) # HARDCODED FOR DEBUG
+    orders = database.searchOrdersForCustomer(session["userid"]) # HARDCODED FOR DEBUG
     reminders = [database.searchRemindersForOrder(order.id) for order in orders]
     locations = [database.searchLocationByID(order.locationid) for order in orders]
     # LATITUDE AND LONGITUDE HAVE TO BE SWITCHED FOR THE API CALL
