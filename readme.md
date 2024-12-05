@@ -37,3 +37,10 @@ This system is composed of two main parts:
     * Contains all the Jinja templates used by the flask server
   - email/
     * Contains all Jinja email templates to be sent out
+   
+### Python Dependencies
+- sqlite3
+- flask
+- jinja2
+- sendgrid
+- psycopg2 (PostgreSQL)
