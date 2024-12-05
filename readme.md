@@ -1,25 +1,39 @@
-## Repository housing my system for tracking contractor orders and replacements of UV lamp filters
+## UV-Lamp
 
-Beginning Stage II Soon!
+Almost Finsihed!
 
-### TODO
+This respository hosts the UV lamp order tracking and reminder project
 
-#### MAJOR:
+This system is composed of two main parts:
 
-- Integration with ORO CRM and API for order/part data
+- The reminder system (Reminder.py), which is responsible for updating the local database and automatically sending out emails when needed
+- The flask web app (Server.py), which is the web app responsible for letting contractors track/update their orders
 
-- Analytics of orders
-
-- Expanded admin view, with views for all related orders for contractors
-
-- Order and update history
-
-- Google maps integration for locations
-
-#### MINOR:
-
-- Priority system for contractors
-
-- Reminder for contractors that the "IN PROCESS" status takes time to update
-
-- Move total orders to the right per request
+### Structure
+- Data.py
+  * Manages the local sqlite3 database connection
+- Emailer.py
+  * Contains methods for sending out emails using the SendGrid API
+- GoogleMapsAPI.py
+  * Contains methods for connecting to and using the google maps API
+  * Used for geolocation, address validation, and getting streetview images from addresses
+- PGData.py
+  * Manages connections to the ORO UAT5 PostgreSQL database
+- Reminder.py
+  * Responsible for updating order statuses, scheduling reminders, and sending out emails when needed
+- Server.py
+  * Hosts the flask web application
+- config/
+  * Contains JSON configuration files for the system
+- container/
+  * Contains several classes for conveient object-like handling of sqlite3 records
+- static/
+  - scripts/
+    * Contains .js scripts used by flask server (pretty much never used)
+  - stylesheets/
+    * Contains .css files used by the flask server
+- templates/
+  - web/
+    * Contains all the Jinja templates used by the flask server
+  - email/
+    * Contains all Jinja email templates to be sent out
