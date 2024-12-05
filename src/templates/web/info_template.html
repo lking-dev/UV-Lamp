@@ -18,20 +18,16 @@
                         Next Replacement: {{ reminder.formatteddate }}
                     </label>
                     <div id = "order-status-div">
-                        {% if order.status != -1 %}
-                            <label class = "order-status-label status-color-green">Active</label>
-                        {% else %}
-                            <label class = "order-status-label status-color-red">Deleted</label>
-                        {% endif %}
+                        <label class = "order-status-label status-color-green">Active</label>
 
                         {% if order.status == 0 %}
                             <label class = "order-status-label status-color-green">Up To Date</label>
                         {% elif order.status == 1 %}
                             <label class = "order-status-label status-color-grey">In Process</label>
                         {% elif order.status == 2 %}
-                            <label class = "order-status-label status-color-yellow">Maintence Soon</label>
+                            <label class = "order-status-label status-color-yellow">Replacement Soon</label>
                         {% elif order.status == 3 %}
-                            <label class = "order-status-label status-color-red">Needs Maintence</label>
+                            <label class = "order-status-label status-color-red">Replacement Needed</label>
                         {% endif %}
                     </div>
                 </div>
@@ -138,8 +134,8 @@
                             Actions
                         </label>
                         <div class = "info-table-row">
-                            <a class = "info-table-link" href = "">Register Maintence Update</a>
-                            <a class = "info-table-link" href = "">Remove Order</a>
+                            <a class = "info-table-link" href = "/pages/update/{{ order.id }}">Register Maintence Update</a>
+                            <a class = "info-table-link" href = "/api/order/{{ order.id }}/delete">Remove Order</a>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 *.txt
 *.log
+*.pyc
+
 __pycache__/
 log/
-*.pyc

@@ -1,19 +1,28 @@
+# Written by Landry M. King, 2024
+# GoogleMapsAPI: routines for working with the Google Maps API
+
 import urllib.request
 import webbrowser
 import urllib
 import json
+from Config import Config
+
+from container.order import OrderObject
+from container.history import HistoryEvent
 from container.location import LocationObject
+from container.customer import CustomerObject
+from container.reminder import ReminderObject
 
-api_key = "AIzaSyBQi69vJT0EvL2A2mX8aiKPCoHhELcQQvc"
-
-def constructStreetviewRequest(location, size, fov: int, key: str = api_key):
+def constructStreetviewRequest(location, size, fov: int):
+    api_key = Config().getGoogleCreds()
     template = "https://maps.googleapis.com/maps/api/streetview?location={},{}&size={}x{}&fov={}&key={}"
-    return template.format(location[0], location[1], size[0], size[1], fov, key)
+    return template.format(location[0], location[1], size[0], size[1], fov, api_key)
 
-def geolocateAddress(address: str, key: str = api_key):
+def geolocateAddress(address: str):
+    api_key = Config().getGoogleCreds()
     template = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}"
     formatted_address = address.replace(" ", "+")
-    final = template.format(formatted_address, key)
+    final = template.format(formatted_address, api_key)
 
     request = urllib.request.urlopen(final)
     json_data = json.loads(request.read())

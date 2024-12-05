@@ -1,19 +1,54 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel = "stylesheet" href = "/static/stylesheets/login.css"/>
+        <link rel = "stylesheet" href = "/static/stylesheets/register.css"/>
         <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body style = "width: 100vw; height: 100vh;">
         <div id = "wrapper-div">
             <div id = "main-div">
-                <label id = "label-signin">Register New Order</label>
-                <form action = "/pages/login" method = "post">
-                    <label id = "label-email" class = "input-label"></label>
-                    <input type = "email" id = "input-email" class = "input-text" placeholder = "ex. johndoe@mail.net" name = "form-email" required>
-                    <label id = "label-password" class = "input-label">Your Password</label>
-                    <input type = "password" id = "input-password" class = "input-text" placeholder = "ex. password123" name = "form-password" required>
-                    <button type = "submit" id = "input-submit" class = "input-button">Sign in</button>
+                <div class = "heading-wrapper">
+                    <label class = "heading-head">Register Your Order</label>
+                    <label class = "heading-subtext">Required Fields Indicated With <span>&nbsp;*</span></label>
+                </div>
+                <form action = "/pages/signup" method = "post">
+                    <div class = "form-wrapper">
+                        <div class = "form-item">
+                            <label>Date of Placement <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-firstname" required>
+                        </div>
+                        <div class = "form-item">
+                            <label>Original Installation Date <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-firstname" required>
+                        </div>
+                        <div class = "form-item">
+                            <label>Current Last Installation Date <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-firstname" required>
+                        </div>
+                        <div class = "form-item">
+                            <label>Installation Address <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. 123 House Road Lane" name = "form-firstname" required>
+                        </div>
+                        <div class = "form-item">
+                            <label>Installion Address City <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. New York" name = "form-firstname" required>
+                        </div>
+                        <div class = "form-item">
+                            <label>Installation Address State Code <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. GA" name = "form-firstname" required>
+                        </div>
+                        <div class = "form-item">
+                            <label>Installation Address Zipcode <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. 12345" name = "form-firstname" required>
+                        </div>
+                        <div class = "form-item">
+                            <label>Product Installed (Item#) <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. TUVL-123" name = "form-firstname" required>
+                        </div>
+                    </div>
+                    <div class = "submit-wrapper">
+                        <input type = "submit" value = "Register Order">
+                    </div>
                 </form> 
             </div>
         </div>

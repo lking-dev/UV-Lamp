@@ -1,36 +1,26 @@
+# Written by Landry M. King, 2024
+# Reminder: responsible for scheduling and sending out reminders for contractor orders
+
 import sqlite3
 import os
 import os.path
+
 from datetime import datetime
 from pathlib import Path
-
 from Data import Data
-from container import customer
-from container import order
-from container import reminder
 
-# ReminderEngine: handles core functionality for orders and reminders
+from container.order import OrderObject
+from container.history import HistoryEvent
+from container.location import LocationObject
+from container.customer import CustomerObject
+from container.reminder import ReminderObject
+
 class Reminder:
     # constructor
     def __init__(self, connector, log_file):
         self.database = connector
         self.log_file = log_file
     
-    # core logic for reminder system
-    # returns a python list of tuples of customer objects to related order objects
-    # ex: [
-    #   (Customer1, Order1),
-    #   (Customer2, Order2)
-    # ]
-    # LOGIC IS SPLIT INTO 2 SECTIONS TO MAKE SURE EVERYTHING IS COVERED IN ONE FUNCTION CALL
-
-    # STATUS TABLE:
-    # -1: DELETED
-    #  0: ALL GOOD
-    #  1: IN PROCESS
-    #  2: DUE SOON
-    #  3: NEEDS REPLACEMENT
-
     def updateReminders(self):
         # fetch the order data
         data = self.database.getAllOrders()
@@ -105,3 +95,6 @@ class Reminder:
 
         # insert the new reminder into the database, linking it to the order
         self.database.addReminder(order.id, next_date)
+
+if __name__ == "__main__":
+    pass

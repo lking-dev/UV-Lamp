@@ -1,3 +1,6 @@
+# Written by Landry M. King, 2024
+# ReminderObject: represents a row of the "Orders" table
+
 from datetime import datetime
 
 class ReminderObject:

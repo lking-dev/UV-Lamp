@@ -1,3 +1,8 @@
+# Written by Landry M. King, 2024
+# CustomerObject: represents a row of the "Customers" table
+# Note: Customer is synonymous with Contractor
+
+
 class CustomerObject:
     def __init__(self, data):
         self.id = data["customerid"]

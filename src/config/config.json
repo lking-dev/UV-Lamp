@@ -1,9 +1,6 @@
 {
-        "database": "orders.db",
-        "reminder_period": 1095,
-        "template": "reminder.html",
-        "sender": "mesbrook@diversitech.com",
-        "api": null,
-        "log_enabled": true,
-        "log_directory": "/log/"
+        "database_file": "orders.db",
+        "email_template": "reminder.html",
+        "server_host": "localhost",
+        "server_port": 80
 }

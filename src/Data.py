@@ -1,7 +1,10 @@
+# Written by Landry M. King, 2024
+# Data: manages the connection to the sqlite3 local database
+
 import sqlite3
 import os
 import os.path
-from pathlib import Path
+
 from container.customer import CustomerObject
 from container.reminder import ReminderObject
 from container.order import OrderObject
@@ -58,16 +61,12 @@ class Data:
         self.cursor.execute(sql, (reminder_date, orderid))
         self.connector.commit()
 
-        print("INSERT INTO Reminders(reminderdate, orderid) VALUES('{}', {});".format(reminder_date, orderid))
-
         return self.cursor.lastrowid
 
     def addHistory(self, date, content, order):
         sql = "INSERT INTO OrderHistory(historydate, historycontent, linkedorderid) VALUES (?, ?, ?);"
         self.cursor.execute(sql, (date, content, order))
         self.connector.commit()
-
-        print("INSERT INTO OrderHistory(historydate, historycontent, linkedorderid) VALUES ('{}', '{}', {});".format(date, content, order))
 
         return self.cursor.lastrowid
     
@@ -111,6 +110,12 @@ class Data:
         self.cursor.execute(sql, [(reminder.id)])
         self.forceCommit()
 
+    # removes an order
+    def delOrder(self, order):
+        sql = "DELETE FROM Orders WHERE orderid = ?;"
+        self.cursor.execute(sql, [(order.id)])
+        self.forceCommit()
+
     # grabs all customer data
     def getAllCustomers(self):
         sql = "SELECT * FROM Customers;"
@@ -147,12 +152,10 @@ class Data:
 
     # find order by id
     def searchOrderByID(self, id):
-        sql = "SELECT * FROM Orders WHERE orderid = " + str(id) + ";"
-        self.cursor.execute(sql)
+        sql = "SELECT * FROM Orders WHERE orderid = ? LIMIT 1;"
+        self.cursor.execute(sql, [(id)])
 
         result = self.cursor.fetchone()
-
-        print(sql)
 
         if not result:
             return None
@@ -160,7 +163,7 @@ class Data:
 
     # find reminder by id
     def searchReminderByID(self, id):
-        sql = "SELECT * FROM Reminders WHERE reminderid = ?;"
+        sql = "SELECT * FROM Reminders WHERE reminderid = ? LIMIT 1;"
         self.cursor.execute(sql, [(id)])
 
         result = self.cursor.fetchone()
@@ -192,7 +195,6 @@ class Data:
         # why? because the values are stored in the table in reversed order
         # i have no clue how that happened. but it needs to be reversed to work
         self.cursor.execute(sql, (long, lat))
-        
         result = self.cursor.fetchone()
 
         if not result:
@@ -257,33 +259,25 @@ class Data:
         self.connector.commit()
     
     def searchOrdersForCustomer(self, customer: int):
-        sql = "SELECT * FROM Orders WHERE customerid = ?;"
-
-        print("SELECT * FROM Orders WHERE customerid = {};".format(customer))
+        sql = "SELECT * FROM Orders WHERE customerid = ? LIMIT 1;"
 
         self.cursor.execute(sql, [(customer)])
         return [OrderObject(o) for o in self.cursor.fetchall() if o != None]
     
     # finds any reminders that pertain to a certian order
-    def searchRemindersForOrder(self, order: int):
-        sql = "SELECT * FROM Reminders WHERE orderid = " + str(order) + " LIMIT 1;"
-        self.cursor.execute(sql)
-
+    def searchRemindersForOrder(self, orderid: int):
+        sql = "SELECT * FROM Reminders WHERE orderid = ? LIMIT 1;"
+        self.cursor.execute(sql, [(orderid)])
         result = self.cursor.fetchone()
-
-        print(sql)
-
+        
         if not result:
             return None
         return ReminderObject(result)
     
-    def searchHistoryForOrder(self, order: int):
-        sql = "SELECT * FROM OrderHistory WHERE linkedorderid = " + str(order) + ";"
-        self.cursor.execute(sql)
-
+    def searchHistoryForOrder(self, orderid: int):
+        sql = "SELECT * FROM OrderHistory WHERE linkedorderid = ?;"
+        self.cursor.execute(sql, [(orderid)])
         results = self.cursor.fetchall()
-
-        print(sql)
 
         if results is None:
             return None

@@ -1,3 +1,6 @@
+# Written by Landry M. King, 2024
+# HistoryEvent: represents a row of the "OrderHistory" table
+
 class HistoryEvent:
     eventMsg = {
         "creation": "Order Created",

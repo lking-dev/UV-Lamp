@@ -1,11 +1,13 @@
+# Written by Landry M. King, 2024
+# Emailer: handles sending of emails using SendGrid API
+
 import os
 import sendgrid
 import jinja2
-import json
+
 from pathlib import Path
 from datetime import datetime
 from sendgrid.helpers import mail
-import smtplib
 from email.mime.text import MIMEText
 
 class Emailer:
@@ -29,34 +31,3 @@ class Emailer:
         response = self.api.send(email)
         
         return response.status_code
-    
-    def sendEmailDemo(self, destination, subject, template_name, context):
-        host = "smtp.mail.yahoo.com"
-        port = 465
-        username = "lanmanking@yahoo.com"
-        password = "GeorgiaTech#1"
-        sender = "lanmanking@yahoo.com"
-        destination = "lanmanking@yahoo.com"
-
-        template_path = os.path.dirname(os.path.realpath(__file__)) + "\\templates\\email\\"
-        env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_path))
-        template = env.get_template(template_name)
-
-        msg = MIMEText(template.render(context))
-        msg["Subject"] = subject
-        msg["From"] = sender
-        msg["To"] = destination
-
-        server = smtplib.SMTP_SSL(host, port)
-        server.login(username, password)
-        server.sendmail(sender, destination, msg.as_string())
-        server.quit()
-
-def test():
-
-    emailer = Emailer(None, "lking@diversitech.com", "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")
-    result = emailer.sendEmail("lanmanking@yahoo.com", "Test!", "reminder.html", {"fullname": "Landry M. King"})
-    print(result)
-
-if __name__ == "__main__":
-    test()

@@ -1,3 +1,6 @@
+# Written by Landry M. King, 2024
+# Config: handles loading the server and credential configuration JSON files
+
 import sqlite3
 import os
 import json
