@@ -10,6 +10,8 @@ This system is composed of two main parts:
 - The flask web app (Server.py), which is the web app responsible for letting contractors track/update their orders
 
 ### Structure
+- Config.py
+  * Helper class that loads configuration data from relevant JSON files
 - Data.py
   * Manages the local sqlite3 database connection
 - Emailer.py
