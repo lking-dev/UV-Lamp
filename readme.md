@@ -44,3 +44,8 @@ This system is composed of two main parts:
 - jinja2
 - sendgrid
 - psycopg2 (PostgreSQL)
+
+### Usage
+- Fill out credentials for Google Maps, ORO CRM, and Sendgrid connection within config/credentials.json
+- To run the web server, run Server.py, and access through configured host
+- To run the reminder system, run Reminder.py
