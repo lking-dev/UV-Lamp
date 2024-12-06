@@ -11,39 +11,44 @@
                     <label class = "heading-head">Register Your Order</label>
                     <label class = "heading-subtext">Required Fields Indicated With <span>&nbsp;*</span></label>
                 </div>
-                <form action = "/pages/signup" method = "post">
+                <form action = "/pages/register" method = "post">
                     <div class = "form-wrapper">
                         <div class = "form-item">
                             <label>Date of Placement <span>&nbsp;*</span></label>
-                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-firstname" required>
+                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-placeddate" required>
                         </div>
                         <div class = "form-item">
                             <label>Original Installation Date <span>&nbsp;*</span></label>
-                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-firstname" required>
+                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-originaldate" required>
                         </div>
                         <div class = "form-item">
-                            <label>Current Last Installation Date <span>&nbsp;*</span></label>
-                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-firstname" required>
+                            <label>Most Recent Installation Date <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-lastdate" required>
                         </div>
                         <div class = "form-item">
                             <label>Installation Address <span>&nbsp;*</span></label>
-                            <input type = "text" placeholder = "ex. 123 House Road Lane" name = "form-firstname" required>
+                            <input type = "text" placeholder = "ex. 123 House Road Lane" name = "form-address0" required>
                         </div>
                         <div class = "form-item">
                             <label>Installion Address City <span>&nbsp;*</span></label>
-                            <input type = "text" placeholder = "ex. New York" name = "form-firstname" required>
+                            <input type = "text" placeholder = "ex. New York" name = "form-address1" required>
                         </div>
                         <div class = "form-item">
                             <label>Installation Address State Code <span>&nbsp;*</span></label>
-                            <input type = "text" placeholder = "ex. GA" name = "form-firstname" required>
+                            <input type = "text" placeholder = "ex. GA" name = "form-address2" required>
                         </div>
                         <div class = "form-item">
                             <label>Installation Address Zipcode <span>&nbsp;*</span></label>
-                            <input type = "text" placeholder = "ex. 12345" name = "form-firstname" required>
+                            <input type = "text" placeholder = "ex. 12345" name = "form-address3" required>
+                        </div>
+                        <div class = "form-item">
+                            <label>Installation Address Homephone <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. 123-456-7890" name = "form-homephone" required>
                         </div>
                         <div class = "form-item">
                             <label>Product Installed (Item#) <span>&nbsp;*</span></label>
-                            <input type = "text" placeholder = "ex. TUVL-123" name = "form-firstname" required>
+                            <label><a href = "https://www.diversitech.com/product-families/indoor-air-quality/residential-indoor-air-quality/replacement-uv-lamps">View Replacement Lamp Items</a></label>
+                            <input type = "text" placeholder = "ex. TUVL-123" name = "form-itemid" required>
                         </div>
                     </div>
                     <div class = "submit-wrapper">

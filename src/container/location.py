@@ -7,12 +7,4 @@ class LocationObject:
         self.address = data["locationaddress"]
         self.longitude = data["locationlongitude"]
         self.latitude = data["locationlatitude"]
-        self.zipcode = data["locationzipcode"]
-        self.city = data["locationcity"]
-        self.state = data["locationstate"]
         self.homephone = data["locationhomephone"]
-
-        if self.address[len(self.address) - 1] == ".":
-            self.address = self.address[:-1]
-
-        self.fulladdress = self.address + ", " + self.city + ", " + self.state + " " + str(self.zipcode)

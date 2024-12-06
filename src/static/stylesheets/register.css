@@ -97,6 +97,11 @@ body {
     color: red;
 }
 
+.form-item label a {
+    color: blue;
+    text-decoration: none;
+}
+
 .form-item input {
     position: relative;
     display: flex;

@@ -32,23 +32,22 @@ class Data:
         self.connector.commit()
 
     # creates a new order
-    def addOrder(self, order: OrderObject):
+    def addOrder(self, placed, original, last, customerid, status, locationid, sku):
         sql = """
             INSERT INTO Orders(
                 orderplaced,
                 orderlastchanged,
+                orderoriginalinstall,
+                orderstatus,
+                ordersku,
                 customerid,
-                orderlocation,
-                orderstatus
-            ) VALUES (?, ?, ?, ?, ?);
+                locationid
+            ) VALUES (?, ?, ?, ?, ?, ?, ?);
         """
 
         self.cursor.execute(sql, (
-            order.placed,
-            order.lastchanged,
-            order.customerid,
-            order.location,
-            order.status,
+            placed, last, original,
+            status, sku, customerid, locationid
         ))
 
         self.connector.commit()
@@ -84,25 +83,18 @@ class Data:
 
         return self.cursor.lastrowid
     
-    def addLocation(self, address, zipcode, city, state, longitude, latitude, homephone):
-        sql = """INSERT INTO Locations
+    def addLocation(self, address, latitude, longitude, homephone):
+        sql = """INSERT INTO Locations(
             locationaddress,
-            locationlogitude,
             locationlatitude,
-            locationzipcode,
-            locationcity,
-            locationstate,
+            locationlongitude,
             locationhomephone
-        ) VALUES (?, ?, ?, ?, ?, ?);"""
+        ) VALUES (?, ?, ?, ?);"""
 
-        self.cursor.execute(sql, (address, longitude, latitude, zipcode, city, state, homephone))
+        self.cursor.execute(sql, (address, latitude, longitude, homephone))
         self.connector.commit()
 
         return self.cursor.lastrowid
-    
-    # adds a location without a home phone number
-    def addLocation(self, address, zipcode, city, state, longitude, latitude):
-        return self.addLocation(address, zipcode, city, state, longitude, latitude, "NO_NUMBER_GIVEN")
 
     # removes a reminder
     def delReminder(self, reminder):
@@ -190,11 +182,7 @@ class Data:
     def searchLocationByCoordinates(self, lat, long):
         sql = """SELECT * FROM Locations WHERE locationlatitude = ? AND locationlongitude = ?;"""
 
-        # IMPORTANT!!!
-        # notice how its (long, lat) instead of the normal (lat, long)?
-        # why? because the values are stored in the table in reversed order
-        # i have no clue how that happened. but it needs to be reversed to work
-        self.cursor.execute(sql, (long, lat))
+        self.cursor.execute(sql, (lat, long))
         result = self.cursor.fetchone()
 
         if not result:

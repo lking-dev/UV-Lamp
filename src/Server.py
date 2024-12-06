@@ -5,6 +5,7 @@ from datetime import datetime
 from Data import Data
 from Config import Config
 from PGData import PGData
+from random import randint
 import GoogleMapsAPI
 
 from container.order import OrderObject
@@ -14,6 +15,7 @@ from container.customer import CustomerObject
 from container.reminder import ReminderObject
 
 app = Flask(__name__)
+app.secret_key = "aghdeahdkhadkhakdhakdhakdhakdhakdhakhdakhdakhdakhyd"
 configuration = Config()
 database_path = configuration.getDatabasePath()
 
@@ -53,35 +55,36 @@ def logout():
 def signup_page():
     return render_template("web/signup.html")
    
-# TODO: ADD ERROR MESSAGES/HANDLING FOR INVALID ADDRESSES
-# USE GOOGLE MAPS ADDRESS VALIDATION API
 @app.post("/pages/signup")
 def signup():
     database = Data(database_path)
 
-    address_components = [request.form["form-address{}".format(i)] for i in range(4)]
-    final_location = -1
+    address = "{}, {}, {} {}".format(
+        request.form["form-address0"],
+        request.form["form-address1"],
+        request.form["form-address2"],
+        request.form["form-address3"])
+    
+    validated_address = GoogleMapsAPI.validateAddress(address)
+    locationid = -1
 
-    # entering an address is OPTIONAL for the contractor
-    # this function validates that an actual address was entered
-    # otherwise its assumed they didnt enter one
-    if validate_address(*address_components):
-        latlong = GoogleMapsAPI.geolocateAddress("{}, {}, {} {}".format(*address_components))
-        possible_location = database.searchLocationByCoordinates(*latlong)
+    if validated_address:
+        (lat, long) = GoogleMapsAPI.geolocateAddress(validated_address)
+        potential = database.searchLocationByCoordinates(lat, long)
 
-        if possible_location is None:
-            locationid = database.addLocation(*address_components, latlong[0], latlong[1])
-            final_location = locationid
+        if potential:
+            locationid = potential.id
         else:
-            final_location = possible_location.id  
-
+            locationid = database.addLocation(validated_address, lat, long, "CONTRACTOR_LOCATION")
+    
     database.addCustomer(
         request.form["form-firstname"],
         request.form["form-lastname"],
         request.form["form-email"],
         request.form["form-company"],
         request.form["form-password"],
-        final_location)      
+        locationid
+    )
     
     return render_template("web/login.html")
 
@@ -91,15 +94,20 @@ def user_orders():
     database = Data(database_path)
 
     orders = database.searchOrdersForCustomer(session["userid"])
+
+    if len(orders) < 1:
+        return render_template("web/orders_template.html", anyorders = False)
+
     reminders = [database.searchRemindersForOrder(order.id) for order in orders]
     locations = [database.searchLocationByID(order.locationid) for order in orders]
     # latitiude and longitude have to be switched
     # this problem occurs in other places throughout the code
     # why? im not sure. but requires them to be reversed to work
-    streetviewlinks = [GoogleMapsAPI.constructStreetviewRequest((location.longitude, location.latitude), (480, 640), 60) for location in locations]
+    streetviewlinks = [GoogleMapsAPI.constructStreetviewRequest((location.latitude, location.longitude), (480, 640), 60) for location in locations]
     locationlinks = [GoogleMapsAPI.constructMapsURL(location) for location in locations]
     
     return render_template("web/orders_template.html",
+        anyorders = True,
         orders = orders,
         reminders = reminders,
         locations = locations,
@@ -165,8 +173,40 @@ def more_info_page(orderid):
 
 # page for registering new orders
 @app.get("/pages/register")
-def register_order():
+def register_page():
     return render_template("web/register.html")
+
+@app.post("/pages/register")
+def register_order():
+    database = Data(database_path)
+
+    address = "{}, {}, {} {}".format(
+        request.form["form-address0"],
+        request.form["form-address1"],
+        request.form["form-address2"],
+        request.form["form-address3"])
+    
+    validated_address = GoogleMapsAPI.validateAddress(address)
+    (lat, long) = GoogleMapsAPI.geolocateAddress(validated_address)
+    location = database.searchLocationByCoordinates(lat, long)
+    locationid = -1
+
+    if location:
+        locationid = location.id
+    else:
+        locationid = database.addLocation(validated_address, lat, long, request.form["form-homephone"])
+
+    database.addOrder(
+        request.form["form-placeddate"],
+        request.form["form-originaldate"],
+        request.form["form-lastdate"],
+        session["userid"],
+        1, # IN PROCESS!
+        locationid,
+        request.form["form-itemid"]
+    )
+
+    return redirect("/pages/orders")
 
 # updates an orders status using POST and url arguments
 @app.get("/pages/update/<orderid>")
@@ -223,13 +263,6 @@ def create_order():
     database.addHistory(get_current_date(), history_msg, orderid)
 
     return redirect("/pages/orders")
-
-def validate_address(address, city, state, zipcode):
-    components = [address, city, state, zipcode]
-    for component in components:
-        if component == None or component == "":
-            return False
-    return True
 
 # try login: determines a login requests validity
 def try_login(email, password):    
