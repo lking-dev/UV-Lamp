@@ -102,7 +102,7 @@
                             <label class = "info-table-value">{{ productwarranty }}</label>
                         </div>
                         <div class = "info-table-row">
-                            <a class = "info-table-link" href = "/pages/items/view/{{ product_sku }}">View Product Information</a>
+                            <a class = "info-table-link" href = "/pages/items/view/{{ order.sku }}">View Product Information</a>
                         </div>
                     </div>
                     <div class = "info-table-wrapper">
@@ -125,11 +125,11 @@
                         <label class = "info-table-header">
                             History
                         </label>
-                        {% for event in history: %}
-                        <div class = "info-table-row">
-                            <label class = "info-table-key">{{ event.content }}</label>
-                            <label class = "info-table-value">{{ event.date }}</label>
-                        </div>
+                        {% for event in history %}
+                            <div class = "info-table-row">
+                                <label class = "info-table-key">{{ event.content }}</label>
+                                <label class = "info-table-value">{{ event.date }}</label>
+                            </div>
                         {% endfor %}
                     </div>
                     <div class = "info-table-wrapper">

@@ -37,6 +37,6 @@ class Config:
         return (
             self.credentials_data["uat5"]["username"],
             self.credentials_data["uat5"]["password"],
-            self.credentials_data["uat5"]["orodb"],
+            self.credentials_data["uat5"]["database"],
             self.credentials_data["uat5"]["host"],
             self.credentials_data["uat5"]["port"])

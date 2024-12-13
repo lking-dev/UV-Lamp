@@ -32,7 +32,6 @@ body {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 16px;
     width: 90%;
-    height: 120%;
     margin-left: auto;
     margin-right: auto;
 
@@ -139,7 +138,9 @@ body {
 .info-table-row {
     padding-left: 32px;
     padding-right: 32px;
-    height: 48px;
+    min-height: 48px;
+    overflow: hidden;
+    display: block;
 }
 
 .info-table-key {
@@ -148,6 +149,7 @@ body {
 }
 
 .info-table-value {
+    display: flex;
     font-size: 34px;
     color: #919191;
     float: right;
