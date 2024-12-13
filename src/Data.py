@@ -233,7 +233,7 @@ class Data:
         self.connector.commit()
     
     def searchOrdersForCustomer(self, customer: int):
-        sql = "SELECT * FROM Orders WHERE customerid = ? LIMIT 1;"
+        sql = "SELECT * FROM Orders WHERE customerid = ?;"
 
         self.cursor.execute(sql, [(customer)])
         return [OrderObject(o) for o in self.cursor.fetchall() if o != None]

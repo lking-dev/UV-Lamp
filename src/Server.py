@@ -64,6 +64,10 @@ def signup():
     
     return render_template("web/login.html")
 
+@app.get("/pages/orders")
+def rerout_orders():
+    return redirect("/pages/orders/user/{}".format(session["userid"]))
+
 # user orders page, the heart of the website, displays all the orders that the user has 
 @app.get("/pages/orders/user/<userid>")
 def user_orders(userid):
@@ -100,13 +104,13 @@ def more_info_page(orderid):
     # get the local sqlite3 connection
     database = Data(database_path)
     # get the external connection to ORO UAT5
-    orodb = PGData()
+    #orodb = PGData()
     
     # grab all relevant data to be shipped to template
     order = database.searchOrderByID(orderid)
     customer = database.searchCustomerByID(order.customerid)
     history = database.searchHistoryForOrder(orderid)
-    product = orodb.getProductData(order.sku)
+    #product = orodb.getProductData(order.sku)
 
     daysuntildue = None
     reminder = None
@@ -127,16 +131,16 @@ def more_info_page(orderid):
         history = history,
         reminder = reminder,
         daysuntildue = daysuntildue,
-        product = product,
+        product = None,
         productwarranty = order.getWarranty())
 
 # page for registering new orders
 @app.get("/pages/register")
 def register_page():
-    return render_template("web/register.html")
+    return render_template("web/register.html", userid = 1)
 
-@app.post("/pages/register")
-def register_order():
+@app.post("/pages/register/<userid>")
+def register_order(userid):
     database = Data(database_path)
 
     address = "{}, {}, {} {}".format(
@@ -158,7 +162,7 @@ def register_order():
         longitude = long,
         original = request.form["form-originaldate"],
         sku = request.form["form-itemid"],
-        customerid = session["userid"],
+        customerid = userid,
         warranty = warranty,
         homephone = request.form["form-homephone"]
     )

@@ -76,13 +76,14 @@ def send_reminders(scheduled, database: Data, emailClient: Emailer):
     print("Starting send_reminders()")
     for order in scheduled:
         contractor = database.searchCustomerByID(order.customerid)
-
+        """
         emailClient.sendEmail(
             contractor.email,
             "UV-Lamp Replacement Needed",
             Config().getEmailTemplate(),
             {"order": order, "customer": contractor, "host": Config().getHost()}
         )
+        """
 
         print("Sent Email to {} ({})".format(contractor.fullname, contractor.email))
     

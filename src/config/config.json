@@ -1,6 +1,6 @@
 {
         "database_file": "orders.db",
         "email_template": "reminder.html",
-        "server_host": "localhost",
+        "server_host": "10.80.175.232",
         "server_port": 80
 }
