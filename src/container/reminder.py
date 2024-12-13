@@ -23,7 +23,7 @@ class ReminderObject:
             "31": "rst"
         }
 
-        nice = weekdays[dt.weekday()] + ", " + months[dt.month] + " " + str(dt.day) + endings[str(dt.day)] + ", " + str(dt.year)
+        nice = weekdays[dt.weekday()] + ", " + months[dt.month - 1] + " " + str(dt.day) + endings[str(dt.day)] + ", " + str(dt.year)
         return nice
 
 

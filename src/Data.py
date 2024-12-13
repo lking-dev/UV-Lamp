@@ -4,12 +4,12 @@
 import sqlite3
 import os
 import os.path
+from datetime import datetime
 
 from container.customer import CustomerObject
 from container.reminder import ReminderObject
 from container.order import OrderObject
 from container.history import HistoryEvent
-from container.location import LocationObject
 
 # DBConnector class
 # holds all functionality for querying and updating records
@@ -32,27 +32,44 @@ class Data:
         self.connector.commit()
 
     # creates a new order
-    def addOrder(self, placed, original, last, customerid, status, locationid, sku):
+    def addOrder(self, placed, last, status, address, latitude, longitude, original, sku, customerid, warranty, homephone):
         sql = """
             INSERT INTO Orders(
                 orderplaced,
                 orderlastchanged,
-                orderoriginalinstall,
                 orderstatus,
+                orderaddress,
+                orderlatitude,
+                orderlongitude,
+                orderoriginalinstall,
                 ordersku,
                 customerid,
-                locationid
-            ) VALUES (?, ?, ?, ?, ?, ?, ?);
+                orderwarranty,
+                orderhomephone
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         """
 
         self.cursor.execute(sql, (
-            placed, last, original,
-            status, sku, customerid, locationid
+            placed,
+            last,
+            status,
+            address,
+            latitude,
+            longitude,
+            original,
+            sku,
+            customerid,
+            warranty,
+            homephone
         ))
 
         self.connector.commit()
+        rowid = self.cursor.lastrowid
 
-        return self.cursor.lastrowid
+        self.addHistory(self.get_current_date(), "Order Created", rowid)
+        self.connector.commit()
+
+        return rowid
 
     # creates a new reminder and links it to an order
     def addReminder(self, orderid, reminder_date):
@@ -69,29 +86,9 @@ class Data:
 
         return self.cursor.lastrowid
     
-    def addCustomer(self, firstname, lastname, email, company, password):
-        sql = "INSERT INTO Customers(customerfirstname, customerlastname, customeremail, customercompany, customerpassword) VALUES (?, ?, ?, ?, ?);"
-        self.cursor.execute(sql, (firstname, lastname, email, company, password))
-        self.connector.commit()
-
-        return self.cursor.lastrowid
-    
-    def addCustomer(self, firstname, lastname, email, company, password, locationid):
-        sql = "INSERT INTO Customers(customerfirstname, customerlastname, customeremail, customercompany, customerpassword, customerlocationid) VALUES (?, ?, ?, ?, ?, ?);"
-        self.cursor.execute(sql, (firstname, lastname, email, company, password, locationid))
-        self.connector.commit()
-
-        return self.cursor.lastrowid
-    
-    def addLocation(self, address, latitude, longitude, homephone):
-        sql = """INSERT INTO Locations(
-            locationaddress,
-            locationlatitude,
-            locationlongitude,
-            locationhomephone
-        ) VALUES (?, ?, ?, ?);"""
-
-        self.cursor.execute(sql, (address, latitude, longitude, homephone))
+    def addCustomer(self, firstname, lastname, company, email, password):
+        sql = "INSERT INTO Customers(customerfirstname, customerlastname, customercompany, customeremail, customerpassword) VALUES (?, ?, ?, ?, ?);"
+        self.cursor.execute(sql, (firstname, lastname, company, email, password))
         self.connector.commit()
 
         return self.cursor.lastrowid
@@ -165,29 +162,6 @@ class Data:
         if not result:
             return None
         return ReminderObject(result)
-    
-    # find location by id
-    def searchLocationByID(self, id):
-        sql = "SELECT * FROM Locations WHERE locationid = ? LIMIT 1;"
-        self.cursor.execute(sql, [(id)])
-
-        result = self.cursor.fetchone()
-
-        print("SELECT * FROM Locations WHERE locationid = {} LIMIT 1;".format(id))
-
-        if not result:
-            return None
-        return LocationObject(result)
-    
-    def searchLocationByCoordinates(self, lat, long):
-        sql = """SELECT * FROM Locations WHERE locationlatitude = ? AND locationlongitude = ?;"""
-
-        self.cursor.execute(sql, (lat, long))
-        result = self.cursor.fetchone()
-
-        if not result:
-            return None
-        return LocationObject(result)
 
     # replaces data for a customer record
     def updateCustomer(self, customer):
@@ -220,18 +194,30 @@ class Data:
             UPDATE Orders SET 
                 orderplaced = ?,
                 orderlastchanged = ?,
+                orderstatus = ?,
+                orderaddress = ?,
+                orderlatitude = ?,
+                orderlongitude = ?,
+                orderoriginalinstall = ?,
+                ordersku = ?,
                 customerid = ?,
-                orderlocation = ?,
-                orderstatus = ? 
+                orderwarranty = ?,
+                orderhomephone = ?
             WHERE orderid = ?;
         """
 
         self.cursor.execute(sql, (
             order.placed,
             order.lastchanged,
-            order.customerid,
-            order.location,
             order.status,
+            order.address,
+            order.latitude,
+            order.longitude,
+            order.originalinstall,
+            order.sku,
+            order.customerid,
+            order.warranty,
+            order.homephone,
             order.id
         ))
 
@@ -271,3 +257,8 @@ class Data:
             return None
         else:
             return [HistoryEvent(event) for event in results]
+        
+    def get_current_date(self):
+        now = datetime.now()
+        date = datetime.strftime(now, "%m/%d/%Y")
+        return date

@@ -26,6 +26,9 @@ class Config:
     
     def getSendgridCreds(self):
         return (self.credentials_data["sendgrid"]["email"], self.credentials_data["sendgrid"]["api_key"])
+
+    def getEmailTemplate(self):
+        return self.config_data["email_template"]
     
     def getGoogleCreds(self):
         return self.credentials_data["google"]["api_key"]

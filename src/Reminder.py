@@ -6,95 +6,107 @@ import os
 import os.path
 
 from datetime import datetime
+from datetime import timedelta
 from pathlib import Path
+
 from Data import Data
+from Config import Config
+from Emailer import Emailer
 
 from container.order import OrderObject
 from container.history import HistoryEvent
-from container.location import LocationObject
 from container.customer import CustomerObject
 from container.reminder import ReminderObject
 
-class Reminder:
-    # constructor
-    def __init__(self, connector, log_file):
-        self.database = connector
-        self.log_file = log_file
-    
-    def updateReminders(self):
-        # fetch the order data
-        data = self.database.getAllOrders()
-        relevant = [order for order in data if order.status != -1]
-        output = []
 
-        # FIRST RUN: MAKES SURE EVERYTHING HAS AN APPROPRIATE ORDER
+def manage_reminders(database: Data):
+    print("Starting manage_reminders()")
+    orders = database.getAllOrders()
+    scheduled = []
 
-        for order in relevant:
-            reminder = self.database.searchRemindersForOrder(order.id)
-            customer = self.database.searchCustomerByID(order.customerid)
+    for order in orders:
+        print("Checking order {}".format(order.id))
 
-            if reminder is None:
-                self.scheduleReminder(order)
+        last_changed = datetime.strptime(order.lastchanged, "%m/%d/%Y")
+        warranty_days = order.warranty * 365
+        due_date = last_changed + timedelta(days = warranty_days)
+        current_date = datetime.now()
 
-        data = self.database.getAllOrders()
-        relevant = [order for order in data if order.status != -1]
+        print("Order {} is due for change on {}".format(order.id, due_date))
 
-
-        for order in relevant:
-            reminder = self.database.searchRemindersForOrder(order.id)
-            due = self.testReminder(reminder)
-            if due:
-                order.status = 3
-
-            soon = self.testSoonReminder(reminder)
-            if soon:
-                order.status = 2
-
-
-            self.database.updateOrder(order)
-
-        self.database.forceCommit()
-
-
-    # determines the rout of action to be taken on a reminder
-    def testReminder(self, reminder):
-        # grab the current date for comparison
-        present = datetime.now()
-        # get a datetime object from the string stored in the reminder
-        due = datetime.strptime(reminder.date, "%m/%d/%Y")
-
-        # if the date has been passed then send email
-        if present >= due:
-            return True
-        # otherwise no action
+        reminder = database.searchRemindersForOrder(order.id)
+        if not reminder:
+            print("Order {} does not have a reminder scheduled, fixing".format(order.id))
+            due_string = datetime.strftime(due_date, "%m/%d/%Y")
+            database.addReminder(order.id, due_string)
+            database.addHistory(getCurrentDate(), "Scheduled Reminder for {}".format(due_string), order.id)
         else:
-            return False
-    
-    # determines if maintence is due within 3 months time
-    def testSoonReminder(self, reminder):
-        # grab the current date for comparison
-        present = datetime.now()
-        # get a datetime object from the string stored in the reminder
-        due = datetime.strptime(reminder.date, "%m/%d/%Y")
+            print("Reminder found for order {}".format(order.id))
 
-        days = (present - due).days
+        previous_status = order.status
 
-        if days <= 90:
-            return True
+        # order is past due
+        if current_date > due_date:
+            order.status = 3
+            if previous_status != 3:
+                database.addHistory(getCurrentDate(), "Status set to \"Needs Maintence\"", order.id)
+            scheduled.append(order)
+            print("Order {} is due for maintence".format(order.id))
+        # order change within 90 days
+        elif (due_date - current_date).days < 90:
+            order.status = 2
+            if previous_status != 2:
+                database.addHistory(getCurrentDate(), "Status set to \"Due Soon\"", order.id)
+            print("Order {} is due for maintence in 90 days".format(order.id))
+        # else: all good!
         else:
-            return False 
+            order.status = 0
+            if previous_status != 0:
+                database.addHistory(getCurrentDate(), "Status set to \"All Good\"", order.id)
+            print("Order {} is up to date".format(order.id))
 
-    # schedules a reminder for an order
-    def scheduleReminder(self, order):
-        # parse datetime out of last changed text field
-        last_change = datetime.strptime(order.lastchanged, "%m/%d/%Y")
-        # calculate the due date of the reminder by adding 3 years 
-        next_change = last_change.replace(year = last_change.year + 3)
-        # convert the new datetime back into a string for the sqlite
-        next_date = datetime.strftime(next_change, "%m/%d/%Y")
+        database.updateOrder(order)
+        print()
 
-        # insert the new reminder into the database, linking it to the order
-        self.database.addReminder(order.id, next_date)
+    print("Ending manage_reminders()")
+    print("Found {} past due orders\n".format(len(scheduled)))
+    return scheduled
+
+def send_reminders(scheduled, database: Data, emailClient: Emailer):
+    print("Starting send_reminders()")
+    for order in scheduled:
+        contractor = database.searchCustomerByID(order.customerid)
+
+        emailClient.sendEmail(
+            contractor.email,
+            "UV-Lamp Replacement Needed",
+            Config().getEmailTemplate(),
+            {"order": order, "customer": contractor, "host": Config().getHost()}
+        )
+
+        print("Sent Email to {} ({})".format(contractor.fullname, contractor.email))
+    
+    print("Ending send_reminders()")
+
+def getCurrentDate():
+    now = datetime.now()
+    date = datetime.strftime(now, "%m/%d/%Y")
+    return date
+
+def main():
+    configuration = Config()
+    database_path = configuration.getDatabasePath()
+    database_connection = Data(database_path)
+
+    (email, api_key) = configuration.getSendgridCreds()
+    email_client = Emailer(email, api_key)
+
+    print("(Reminder.py): Starting processing")
+
+    scheduled = manage_reminders(database_connection)
+    send_reminders(scheduled, database_connection, email_client)
+
+    print("Finished processing orders.")
 
 if __name__ == "__main__":
-    pass
+    main()

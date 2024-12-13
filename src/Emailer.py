@@ -8,7 +8,6 @@ import jinja2
 from pathlib import Path
 from datetime import datetime
 from sendgrid.helpers import mail
-from email.mime.text import MIMEText
 
 class Emailer:
     def __init__(self, email, key):

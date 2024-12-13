@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <body>
-    <h1>Hello, {{ fullname }}!</h1>
-    <h2>You are recieving this email because your order requires updating</h2>
+    <h1>Hello, {{ customer.fullname }}!</h1>
+    <h2>You are recieving this email because your order (ID #{{ order.formattedid }}) requires updating</h2>
+    <h2>View Your Order Details <a href = "{{ host }}">Here</a></h2>
 </body>

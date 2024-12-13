@@ -1,16 +1,31 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel = "stylesheet" href = "/static/stylesheets/info.css"/>
+        <link rel = "stylesheet" href = "/static/stylesheets/register.css"/>
         <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body style = "width: 100vw; height: 100vh;">
-        <label id = "head-label">
-            Update Order Information
-        </label>
         <div id = "wrapper-div">
             <div id = "main-div">
-
+                <div class = "heading-wrapper">
+                    <label class = "heading-head">Update Status of Order #{{ order.formattedid }}</label>
+                    <label class = "heading-subtext">Required Fields Indicated With <span>&nbsp;*</span></label>
+                </div>
+                <form action = "/pages/update/{{ order.id }}" method = "post">
+                    <div class = "form-wrapper">
+                        <div class = "form-item">
+                            <label>Date of Change <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. MM/DD/YYYY" name = "form-changedate" required>
+                        </div>
+                        <div class = "form-item">
+                            <label>Emergency Maintence due to Failure? (Yes/No) <span>&nbsp;*</span></label>
+                            <input type = "text" placeholder = "ex. YES/NO" name = "form-wasmaintence" required>
+                        </div>
+                    </div>
+                    <div class = "submit-wrapper">
+                        <input type = "submit" value = "Update Status">
+                    </div>
+                </form> 
             </div>
         </div>
     </body>

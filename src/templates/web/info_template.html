@@ -65,14 +65,25 @@
                             <label class = "info-table-key">Most Recent Install:</label>
                             <label class = "info-table-value">{{ order.lastchanged }}</label>
                         </div>
-                        <div class = "info-table-row">
-                            <label class = "info-table-key">Next Install:</label>
-                            <label class = "info-table-value">{{ reminder.date }}</label>
-                        </div>
-                        <div class = "info-table-row">
-                            <label class = "info-table-key">Days Until Next Install:</label>
-                            <label class = "info-table-value">{{ daysuntildue }}</label>
-                        </div>
+                        {% if order.status == 1 %}
+                            <div class = "info-table-row">
+                                <label class = "info-table-key">Next Install:</label>
+                                <label class = "info-table-value">AWAITING PROCESSING</label>
+                            </div>
+                            <div class = "info-table-row">
+                                <label class = "info-table-key">Days Until Next Install:</label>
+                                <label class = "info-table-value">AWAITING PROCESSING</label>
+                            </div>
+                        {% else %}
+                            <div class = "info-table-row">
+                                <label class = "info-table-key">Next Install:</label>
+                                <label class = "info-table-value">{{ reminder.date }}</label>
+                            </div>
+                            <div class = "info-table-row">
+                                <label class = "info-table-key">Days Until Next Install:</label>
+                                <label class = "info-table-value">{{ daysuntildue }}</label>
+                            </div>
+                        {% endif %}
                     </div>
                     <div class = "info-table-wrapper">
                         <label class = "info-table-header">
@@ -100,14 +111,14 @@
                         </label>
                         <div class = "info-table-row">
                             <label class = "info-table-key">Address:</label>
-                            <label class = "info-table-value">{{ location.address }}</label>
+                            <label class = "info-table-value">{{ order.address }}</label>
                         </div>
                         <div class = "info-table-row">
                             <label class = "info-table-key">Home Phone #:</label>
-                            <label class = "info-table-value">{{ location.homephone }}</label>
+                            <label class = "info-table-value">{{ order.homephone }}</label>
                         </div>
                         <div class = "info-table-row">
-                            <a class = "info-table-link" href = "{{ generatedmapslink }}">Go To Address</a>
+                            <a class = "info-table-link" href = "{{ order.locationLink }}">Go To Address</a>
                         </div>
                     </div>
                     <div class = "info-table-wrapper">

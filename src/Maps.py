@@ -8,21 +8,16 @@ import json
 import googlemaps
 from Config import Config
 
-from container.order import OrderObject
-from container.history import HistoryEvent
-from container.location import LocationObject
-from container.customer import CustomerObject
-from container.reminder import ReminderObject
 
-def constructStreetviewRequest(location, size, fov: int):
+def constructStreetviewRequest(lat, long, width, height, fov: int):
     api_key = Config().getGoogleCreds()
     template = "https://maps.googleapis.com/maps/api/streetview?location={},{}&size={}x{}&fov={}&key={}"
-    return template.format(location[0], location[1], size[0], size[1], fov, api_key)
+    return template.format(lat, long, width, height, fov, api_key)
 
 # validates an addresses validity, returns None if bad address
-def validateAddress(address):
+def validateAddress(crude_address):
     client = googlemaps.Client(key = Config().getGoogleCreds())
-    results = client.addressvalidation(address, regionCode = 'US')
+    results = client.addressvalidation(crude_address, regionCode = 'US')
     
     if results["result"]["verdict"]["validationGranularity"] == "PREMISE":
         return results["result"]["address"]["formattedAddress"]
@@ -39,14 +34,12 @@ def geolocateAddress(address):
         return None
 
 # returns a google maps url for a location object
-def constructMapsURL(location: LocationObject):
+def constructMapsURL(address):
     template = "https://www.google.com/maps/search/?api=1&query={}"
     builder = ""
 
     # this is a lot of formatting stuff to appease the google maps API
-
-    
-    components = location.address.split()
+    components = address.split()
     for i, component in enumerate(components):
         builder += component
         if (i != len(components) - 1):

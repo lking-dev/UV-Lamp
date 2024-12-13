@@ -20,9 +20,9 @@
                         <tr class = "table-row">
                             <td class = "table-item">
                                 <div class = "item-div-left">
-                                    <img class = "item-thumbnail" src = "{{ streetviewlinks[loop.index0] }}"/>
+                                    <img class = "item-thumbnail" src = "{{ order.streetviewLink }}"/>
                                     <div class = "location-button-div">
-                                        <a class = "location-button" href = "{{ locationlinks[loop.index0] }}">
+                                        <a class = "location-button" href = "{{ order.locationLink }}">
                                             <i class = "fa fa-location-arrow visit-maps-button" aria-hidden="true"></i>
                                         </a>
                                     </div>
@@ -35,7 +35,7 @@
                                             {% if order.status == 0 %}
                                                 <label class = "order-status-label status-color-green">All Good</label>
                                             {% elif order.status == 1 %}
-                                                <label class = "order-status-label status-color-gray">In Process</label>
+                                                <label class = "order-status-label status-color-grey">In Process</label>
                                             {% elif order.status == 2 %}
                                                 <label class = "order-status-label status-color-yellow">Replacement Soon</label>
                                             {% elif order.status == 3 %}
@@ -43,8 +43,12 @@
                                             {% endif %}
                                     </div>
                                     <div class = "item-div-bottom-right">
-                                        <label class = "item-description-label">Address: <span style = "color: black;">{{ locations[loop.index0].address }}</span></label>
-                                        <label class = "item-description-label">Next Change: <span style = "color: black;">{{ reminders[loop.index0].date }}</span></label>
+                                        <label class = "item-description-label">Address: <span style = "color: black;">{{ order.address }}</span></label>
+                                        {% if order.status == 1 %}
+                                            <label class = "item-description-label">Next Change: <span style = "color: black;">AWAITING PROCESSING</span></label>
+                                        {% else %}
+                                            <label class = "item-description-label">Next Change: <span style = "color: black;">{{ reminders[loop.index0].date }}</span></label>
+                                        {% endif %}
                                         <label class = "item-description-label">Installed Product: <span style = "color: black;">{{ order.sku }}</span></label>
                                     </div>
                                     <div class = "info-button-div">
@@ -63,7 +67,7 @@
         <div class = "nav-bar">
             <a href = "/pages/register"><i class = "fa fa-plus" aria-hidden="true"></i></a>
             <a href = ""><i class = "fa fa-user" aria-hidden="true"></i></a>
-            <a href = ""><i class = "fa fa-sign-in" aria-hidden="true"></i></a>
+            <a href = "/pages/logout"><i class = "fa fa-sign-in" aria-hidden="true"></i></a>
         </div>
     </body>
 </html>
