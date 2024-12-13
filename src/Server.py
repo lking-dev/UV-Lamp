@@ -4,7 +4,7 @@ from datetime import datetime
 
 from Data import Data
 from Config import Config
-#from PGData import PGData
+from PGData import PGData
 import Maps
 
 from container.order import OrderObject
@@ -100,12 +100,13 @@ def more_info_page(orderid):
     # get the local sqlite3 connection
     database = Data(database_path)
     # get the external connection to ORO UAT5
-    #orodb = PGData()
+    orodb = PGData()
     
     # grab all relevant data to be shipped to template
     order = database.searchOrderByID(orderid)
     customer = database.searchCustomerByID(order.customerid)
     history = database.searchHistoryForOrder(orderid)
+    product = orodb.getProductData(order.sku)
 
     daysuntildue = None
     reminder = None
@@ -126,7 +127,7 @@ def more_info_page(orderid):
         history = history,
         reminder = reminder,
         daysuntildue = daysuntildue,
-        product = None,
+        product = product,
         productwarranty = order.getWarranty())
 
 # page for registering new orders
